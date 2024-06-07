@@ -7,16 +7,21 @@ namespace GameOfLife.Domain.GameStates
     {
         public int Width { get; }
         public int Height { get; }
-        public byte[,] Cells { get; private set; }
+        public ushort[][] Cells { get; private set; }
 
         public GameStateSimulation(GamesState gamesState)
         {
-            var currentState = JsonSerializer.Deserialize<byte[,]>(gamesState.State);
+            var currentState = JsonSerializer.Deserialize<ushort[][]>(gamesState.State);
 
             Width = currentState.Length;
-            Height = currentState.Length;
+            Height = currentState[0].Length;
 
-            Cells = new byte[Width, Height];
+            Cells = new ushort[Width][];
+            for (int i = 0; i < Width; i++)
+            {
+                Cells[i] = new ushort[Height];
+                Array.Copy(currentState[i], Cells[i], Height);
+            }
         }
 
         private int LiveNeighbours(int x, int y)
@@ -33,7 +38,7 @@ namespace GameOfLife.Domain.GameStates
                     if (x + i == x && y + j == y)
                         continue;
 
-                    liveNeighbours += Cells[x + i, y + j] >= 1 ? 1 : 0;
+                    liveNeighbours += Cells[x + i][y + j] >= 1 ? 1 : 0;
                 }
             }
 
@@ -42,33 +47,37 @@ namespace GameOfLife.Domain.GameStates
 
         public string Next()
         {
-            var cells = new byte[Width, Height];
+            var cells = new ushort[Width][];
+            for (var i = 0; i < Width; i++)
+            {
+                cells[i] = new ushort[Height];
+            }
 
             for (var x = 0; x < Width; x++)
             {
                 for (var y = 0; y < Height; y++)
                 {
                     var liveNeighbours = LiveNeighbours(x, y);
-                    var age = Cells[x, y];
+                    var age = Cells[x][y];
 
                     if (liveNeighbours == 3)
                     {
                         if (age > 8)
                         {
-                            cells[x, y] = 0;
+                            cells[x][y] = 0;
                         }
                         else
                         {
-                            cells[x, y] = age++;
+                            cells[x][y] = (ushort)(age + 1);
                         }
                     }
                     else if (liveNeighbours == 2)
                     {
-                        cells[x, y] = age;
+                        cells[x][y] = age;
                     }
                     else
                     {
-                        cells[x, y] = 0;
+                        cells[x][y] = 0;
                     }
                 }
             }

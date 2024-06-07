@@ -9,7 +9,7 @@ namespace GameOfLife.Application.Games.Create;
 public sealed record CreateGameCommand(
     int Width,
     int Height,
-    byte[,] State) : ICommand<Guid>;
+    ushort[][] State) : ICommand<Guid>;
 
 internal sealed class CreateGameCommandHandler(
     IGameRepository gameRepository,
@@ -29,8 +29,6 @@ internal sealed class CreateGameCommandHandler(
             Guid.NewGuid(),
             command.State
             );
-
-        gameState.ExecuteNextGaneration();
 
         await gameRepository.InsertAsync(game, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);

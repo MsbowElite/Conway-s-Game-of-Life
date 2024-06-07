@@ -6,7 +6,7 @@ namespace GameOfLife.Domain.GamesStates
 {
     public sealed class GamesState : Entity
     {
-        public GamesState(Guid id, byte[,] cellsState) : base(id) 
+        public GamesState(Guid id, ushort[][] cellsState) : base(id) 
         {
             State = JsonSerializer.Serialize(cellsState);
         }
