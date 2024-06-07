@@ -5,6 +5,7 @@
         protected Entity(Guid id)
         {
             Id = id;
+            CreatedAt = DateTime.UtcNow;
         }
 
         protected Entity()
