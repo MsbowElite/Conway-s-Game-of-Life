@@ -1,4 +1,4 @@
-﻿namespace GameOfLife.SharedKernel;
+﻿namespace GameOfLife.SharedKernel.Abstractions;
 
 public interface IUnitOfWork
 {

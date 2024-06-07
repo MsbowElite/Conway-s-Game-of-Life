@@ -1,5 +1,5 @@
 ﻿using GameOfLife.Domain.Games;
-using GameOfLife.SharedKernel;
+using GameOfLife.SharedKernel.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace GameOfLife.Infrastructure.Database;

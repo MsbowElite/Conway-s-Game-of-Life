@@ -1,11 +1,15 @@
 ﻿using GameOfLife.Application.Abstractions.Messaging;
 using GameOfLife.Domain.Games;
+using GameOfLife.Domain.GamesStates;
 using GameOfLife.SharedKernel;
+using GameOfLife.SharedKernel.Abstractions;
 
 namespace GameOfLife.Application.Games.Create;
 
 public sealed record CreateGameCommand(
-    string State) : ICommand<Guid>;
+    int Width,
+    int Height,
+    byte[,] State) : ICommand<Guid>;
 
 internal sealed class CreateGameCommandHandler(
     IGameRepository gameRepository,
@@ -17,7 +21,16 @@ internal sealed class CreateGameCommandHandler(
     CancellationToken cancellationToken)
     {
         var game = new Game(
-            Guid.NewGuid());
+            Guid.NewGuid(),
+            command.Width,
+            command.Height);
+
+        var gameState = new GamesState(
+            Guid.NewGuid(),
+            command.State
+            );
+
+        gameState.ExecuteNextGaneration();
 
         await gameRepository.InsertAsync(game, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);

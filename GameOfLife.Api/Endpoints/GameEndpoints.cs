@@ -24,7 +24,8 @@ public class GameEndpoints : IEndpoints
             .WithName("CreateGame")
             .Accepts<CreateGameRequest>(ContentType)
             .Produces<Guid>(201)
-            .Produces<IEnumerable<ValidationFailure>>(400);
+            .Produces<IEnumerable<ValidationFailure>>(400)
+            .WithOpenApi();
     }
 
     internal static async Task<IResult> CreateGameAsync(
@@ -32,6 +33,7 @@ public class GameEndpoints : IEndpoints
         ISender sender,
         CancellationToken cancellationToken)
     {
+        byte[,] a = { { 0, 0 }, { 1, 2 }, { 2, 4 }, { 3, 6 }, { 4, 8 } };
         var command = request.Adapt<CreateGameCommand>();
         var result = await sender.Send(command, cancellationToken);
 
