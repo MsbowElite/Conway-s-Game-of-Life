@@ -1,8 +1,9 @@
 ﻿using GameOfLife.Domain.Games;
+using GameOfLife.Domain.GameStates;
+using GameOfLife.Infrastructure.Caching;
 using GameOfLife.Infrastructure.Database;
 using GameOfLife.Infrastructure.Repositories;
 using GameOfLife.SharedKernel.Abstractions;
-using GameOfLife.Infrastructure.Caching;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -29,6 +30,7 @@ public static class InfrastructureDependencyInjection
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<GameContext>());
 
         services.AddScoped<IGameRepository, GameRepository>();
+        services.AddScoped<IGameStateRepository, GameStateRepository>();
 
         services.AddDistributedMemoryCache();
         services.AddSingleton<ICacheService, CacheService>();

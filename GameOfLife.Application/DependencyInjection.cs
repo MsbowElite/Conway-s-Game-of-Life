@@ -1,6 +1,6 @@
-﻿using GameOfLife.Application.Abstractions.Behaviors;
+﻿using FluentValidation;
+using GameOfLife.Application.Abstractions.Behaviors;
 using Microsoft.Extensions.DependencyInjection;
-using FluentValidation;
 
 namespace GameOfLife.Application;
 

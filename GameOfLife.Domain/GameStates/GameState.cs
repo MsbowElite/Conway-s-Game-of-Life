@@ -1,24 +1,31 @@
-﻿using GameOfLife.Domain.GameStates;
+﻿using GameOfLife.Domain.Games;
 using GameOfLife.SharedKernel;
 using System.Text.Json;
 
-namespace GameOfLife.Domain.GamesStates
+namespace GameOfLife.Domain.GameStates;
+
+public sealed class GameState : Entity
 {
-    public sealed class GamesState : Entity
+    public GameState(
+        Guid id,
+        Guid gameId,
+        ushort[][] cellsState) : base(id)
     {
-        public GamesState(Guid id, ushort[][] cellsState) : base(id) 
-        {
-            State = JsonSerializer.Serialize(cellsState);
-        }
+        GameId = gameId;
+        State = JsonSerializer.Serialize(cellsState);
+    }
 
-        private GamesState() { }
+    private GameState() { }
 
-        public string State { get; set; }
+    public string State { get; set; }
+    public ushort GenerationNumber { get; set; }
 
-        public void ExecuteNextGaneration()
-        {
-            var gameSimulation = new GameStateSimulation(this);
-            State = gameSimulation.Next();
-        }
+    public Guid GameId { get; set; }
+    public Game? GameRelation { get; set; }
+
+    public void ExecuteNextGaneration()
+    {
+        var gameSimulation = new GameStateSimulation(this);
+        State = gameSimulation.Next();
     }
 }

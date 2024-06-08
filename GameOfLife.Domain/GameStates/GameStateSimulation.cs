@@ -1,5 +1,4 @@
-﻿using GameOfLife.Domain.GamesStates;
-using System.Text.Json;
+﻿using System.Text.Json;
 
 namespace GameOfLife.Domain.GameStates
 {
@@ -9,7 +8,7 @@ namespace GameOfLife.Domain.GameStates
         public int Height { get; }
         public ushort[][] Cells { get; private set; }
 
-        public GameStateSimulation(GamesState gamesState)
+        public GameStateSimulation(GameState gamesState)
         {
             var currentState = JsonSerializer.Deserialize<ushort[][]>(gamesState.State);
 

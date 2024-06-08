@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
-using MediatR;
 using GameOfLife.SharedKernel;
+using MediatR;
 using System.Reflection;
 
 namespace GameOfLife.Application.Abstractions.Behaviors;

@@ -1,8 +1,8 @@
 ﻿using GameOfLife.Application.Abstractions.Caching;
-using MediatR;
-using Microsoft.Extensions.Logging;
 using GameOfLife.SharedKernel;
 using GameOfLife.SharedKernel.Abstractions;
+using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace GameOfLife.Application.Abstractions.Behaviors
 {

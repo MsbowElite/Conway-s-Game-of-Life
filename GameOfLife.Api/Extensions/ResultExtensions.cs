@@ -20,6 +20,15 @@ public static class ResultExtensions
         return result.IsSuccess ? onSuccess(result.Value) : onFailure(result);
     }
 
+    /// <summary>
+    /// Adding a header with the location of get of created object
+    /// and the id in the body following http status 201
+    /// </summary>
+    /// <typeparam name="TIn"></typeparam>
+    /// <param name="result"></param>
+    /// <param name="baseAddress"></param>
+    /// <param name="onFailure"></param>
+    /// <returns></returns>
     public static IResult MatchCreated<TIn>(
     this Result<TIn> result,
     string baseAddress,

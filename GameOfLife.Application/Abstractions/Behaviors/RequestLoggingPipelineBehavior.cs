@@ -1,7 +1,7 @@
-﻿using MediatR;
+﻿using GameOfLife.SharedKernel;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using Serilog.Context;
-using GameOfLife.SharedKernel;
 
 namespace GameOfLife.Application.Abstractions.Behaviors;
 

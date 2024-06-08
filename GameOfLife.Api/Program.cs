@@ -29,6 +29,8 @@ app.UseEndpoints<Program>();
 app.UseSwagger();
 app.UseSwaggerUI();
 
+app.ApplyMigrations();
+
 app.UseRequestContextLogging();
 app.UseSerilogRequestLogging();
 app.UseExceptionHandler();

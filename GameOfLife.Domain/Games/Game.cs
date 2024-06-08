@@ -5,9 +5,9 @@ namespace GameOfLife.Domain.Games;
 public sealed class Game : Entity
 {
     public Game(
-        Guid id, 
-        int width, 
-        int height) : base(id) 
+        Guid id,
+        ushort width,
+        ushort height) : base(id)
     {
         Width = width;
         Height = height;
@@ -15,6 +15,7 @@ public sealed class Game : Entity
 
     private Game() { }
 
-    public int Width { get; }
-    public int Height { get; }
+    public ushort Width { get; }
+    public ushort Height { get; }
+    public ushort FinalGenerationNumber { get; }
 }

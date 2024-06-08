@@ -5,8 +5,13 @@ namespace GameOfLife.Infrastructure.Repositories;
 
 public sealed class GameRepository(GameContext context) : IGameRepository
 {
-    public Task InsertAsync(Game game, CancellationToken cancellationToken)
+    public async Task InsertAsync(Game game, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        await context.Games.AddAsync(game, cancellationToken);
+    }
+
+    public async Task<Game> GetByIdAsync(Guid gameId, CancellationToken cancellationToken)
+    {
+        return await context.Games.FindAsync(gameId, cancellationToken);
     }
 }
