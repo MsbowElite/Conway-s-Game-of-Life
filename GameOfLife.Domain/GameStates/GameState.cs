@@ -15,17 +15,30 @@ public sealed class GameState : Entity
         State = JsonSerializer.Serialize(cellsState);
     }
 
+    public GameState(
+    Guid id,
+    Guid gameId,
+    string state,
+    ushort generationNumber) : base(id)
+    {
+        GameId = gameId;
+        State = state;
+        GenerationNumber = generationNumber;
+    }
+
     private GameState() { }
 
     public string State { get; set; }
     public ushort GenerationNumber { get; set; }
-
     public Guid GameId { get; set; }
+
     public Game? GameRelation { get; set; }
+    public Game Game { get; set; }
 
     public void ExecuteNextGaneration()
     {
         var gameSimulation = new GameStateSimulation(this);
         State = gameSimulation.Next();
+        GenerationNumber++;
     }
 }

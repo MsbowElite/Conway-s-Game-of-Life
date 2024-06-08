@@ -23,6 +23,7 @@
   <ItemGroup>
     <Folder Include="Abstractions\Behaviors\" />
     <Folder Include="Abstractions\Caching\" />
+    <Folder Include="Games\NewFolder\" />
   </ItemGroup>
 
 </Project>

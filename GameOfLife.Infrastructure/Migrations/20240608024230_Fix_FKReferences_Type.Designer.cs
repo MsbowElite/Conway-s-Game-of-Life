@@ -3,6 +3,7 @@ using System;
 using GameOfLife.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GameOfLife.Infrastructure.Migrations
 {
     [DbContext(typeof(GameContext))]
-    partial class GameContextModelSnapshot : ModelSnapshot
+    [Migration("20240608024230_Fix_FKReferences_Type")]
+    partial class Fix_FKReferences_Type
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,6 +40,9 @@ namespace GameOfLife.Infrastructure.Migrations
                     b.Property<Guid>("GameId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("GameRelationId")
+                        .HasColumnType("uuid");
+
                     b.Property<short>("GenerationNumber")
                         .HasColumnType("smallint");
 
@@ -50,6 +56,8 @@ namespace GameOfLife.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("GameId");
+
+                    b.HasIndex("GameRelationId");
 
                     b.ToTable("GameStates");
                 });
@@ -66,9 +74,6 @@ namespace GameOfLife.Infrastructure.Migrations
                     b.Property<DateTime>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid?>("FinalGameStateId")
-                        .HasColumnType("uuid");
-
                     b.Property<short>("Height")
                         .HasColumnType("smallint");
 
@@ -80,38 +85,25 @@ namespace GameOfLife.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FinalGameStateId")
-                        .IsUnique();
-
                     b.ToTable("Games");
                 });
 
             modelBuilder.Entity("GameOfLife.Domain.GameStates.GameState", b =>
                 {
-                    b.HasOne("GameOfLife.Domain.Games.Game", "GameRelation")
+                    b.HasOne("GameOfLife.Domain.Games.Game", "Game")
                         .WithMany("GameStates")
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("Game_FK");
+                        .HasConstraintName("GameState_FK");
+
+                    b.HasOne("GameOfLife.Domain.Games.Game", "GameRelation")
+                        .WithMany()
+                        .HasForeignKey("GameRelationId");
+
+                    b.Navigation("Game");
 
                     b.Navigation("GameRelation");
-                });
-
-            modelBuilder.Entity("GameOfLife.Domain.Games.Game", b =>
-                {
-                    b.HasOne("GameOfLife.Domain.GameStates.GameState", "GameState")
-                        .WithOne("Game")
-                        .HasForeignKey("GameOfLife.Domain.Games.Game", "FinalGameStateId")
-                        .HasConstraintName("GameStateFinal_FK");
-
-                    b.Navigation("GameState");
-                });
-
-            modelBuilder.Entity("GameOfLife.Domain.GameStates.GameState", b =>
-                {
-                    b.Navigation("Game")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("GameOfLife.Domain.Games.Game", b =>

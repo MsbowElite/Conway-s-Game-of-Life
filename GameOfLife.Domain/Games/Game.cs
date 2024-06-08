@@ -1,4 +1,5 @@
-﻿using GameOfLife.SharedKernel;
+﻿using GameOfLife.Domain.GameStates;
+using GameOfLife.SharedKernel;
 
 namespace GameOfLife.Domain.Games;
 
@@ -13,9 +14,16 @@ public sealed class Game : Entity
         Height = height;
     }
 
-    private Game() { }
+    private Game() 
+    {
+        GameStates = [];
+    }
 
     public ushort Width { get; }
     public ushort Height { get; }
-    public ushort FinalGenerationNumber { get; }
+    public Guid? FinalGameStateId { get; }
+
+    public GameState? GameState { get; set; } = null;
+
+    public ICollection<GameState> GameStates { get; set; }
 }
