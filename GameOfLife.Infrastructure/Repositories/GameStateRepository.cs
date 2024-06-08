@@ -1,5 +1,4 @@
-﻿using GameOfLife.Domain.Games;
-using GameOfLife.Domain.GameStates;
+﻿using GameOfLife.Domain.GameStates;
 using GameOfLife.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 

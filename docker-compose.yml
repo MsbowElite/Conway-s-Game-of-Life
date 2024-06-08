@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+  gameoflife.api:
+    image: ${DOCKER_REGISTRY-}gameoflifeapi
+    build:
+      context: .
+      dockerfile: GameOfLife.Api/Dockerfile
+
+  gameoflifeapi.postgres:
+      image: "postgres"
+      ports:
+        - "5432:5432" 
+      environment:
+        - POSTGRES_PASSWORD=mysecretpassword
+    

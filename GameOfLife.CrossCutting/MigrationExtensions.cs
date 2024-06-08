@@ -14,7 +14,15 @@ public static class MigrationExtensions
         using GameContext dbContext =
             scope.ServiceProvider.GetRequiredService<GameContext>();
 
-        //if (!dbContext.Database.IsInMemory())
-        dbContext.Database.Migrate();
+        if (CheckIfProviderIsNotInMemory(dbContext))
+            dbContext.Database.Migrate();
     }
+
+    /// <summary>
+    /// Get provider name and check if it is InMemory
+    /// </summary>
+    /// <param name="dbContext"></param>
+    /// <returns></returns>
+    private static bool CheckIfProviderIsNotInMemory(GameContext dbContext) =>
+        !string.Equals(dbContext.Database.ProviderName, "Microsoft.EntityFrameworkCore.InMemory", StringComparison.OrdinalIgnoreCase);
 }

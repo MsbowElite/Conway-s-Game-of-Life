@@ -14,7 +14,7 @@ public sealed class Game : Entity
         Height = height;
     }
 
-    private Game() 
+    private Game()
     {
         GameStates = [];
     }

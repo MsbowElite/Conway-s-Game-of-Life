@@ -18,12 +18,12 @@ internal sealed class GetGameStateByGenerationQueryHandler(
         CancellationToken cancellationToken)
     {
         var gameExists = await gameRepository.AnyByIdAsync(query.GameId, cancellationToken);
-        if (!gameExists) 
+        if (!gameExists)
             return Result.Failure<GameStateResponse>(GameErrors.NotFound(query.GameId));
 
         var gameState = await gameStateRepository.GetByGameIdAndGenerationNumberAsync(
             query.GameId, query.GenerationNumber, cancellationToken);
-        if (gameState == null) 
+        if (gameState == null)
             return Result.Failure<GameStateResponse>(GameErrors.StateNotFound(query.GenerationNumber));
 
         return gameState.Adapt<GameStateResponse>();
