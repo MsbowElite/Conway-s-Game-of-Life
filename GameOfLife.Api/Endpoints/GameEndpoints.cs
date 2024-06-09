@@ -6,6 +6,7 @@ using GameOfLife.Application.Games;
 using GameOfLife.Application.Games.Create;
 using GameOfLife.Application.Games.ExecuteNextStateGeneration;
 using GameOfLife.Application.Games.GetById;
+using GameOfLife.Application.Games.GetNextState;
 using GameOfLife.Application.Games.GetStateByGeneration;
 using Mapster;
 using MediatR;
@@ -31,16 +32,32 @@ public class GameEndpoints : IEndpoints
             .Produces<IEnumerable<ValidationFailure>>(400)
             .WithOpenApi();
 
-        battles.MapPost($"{Slash}{{gameId}}{Slash}GameStates{Slash}NextGeneration", ExecuteNextGaneration)
+        battles.MapPost($"{Slash}{{gameId}}{Slash}GameStates{Slash}Next", ExecuteNextGaneration)
             .WithName("ExecuteNextGaneration")
             .Produces<Guid>(201)
             .Produces<IEnumerable<ValidationFailure>>(400)
             .Produces<string>(404)
+            .Produces<string>(409)
+            .WithOpenApi();
+
+        battles.MapGet($"{Slash}{{gameId}}{Slash}GameStates{Slash}Next", GetNextGaneration)
+            .WithName("GetNextGaneration")
+            .Produces<GameStateResponse>(200)
+            .Produces<IEnumerable<ValidationFailure>>(400)
+            .Produces<string>(404)
+            .Produces<string>(409)
             .WithOpenApi();
 
         battles.MapGet($"{Slash}{{gameId}}", GetGameByIdAsync)
             .WithName("GetGame")
             .Produces<GameResponse>(200)
+            .Produces<IEnumerable<ValidationFailure>>(400)
+            .Produces<string>(404)
+            .WithOpenApi();
+
+        battles.MapGet($"{Slash}{{gameId}}{Slash}GameStates{Slash}Final", GetFinalState)
+            .WithName("GetFinalState")
+            .Produces<GameStateResponse>(200)
             .Produces<IEnumerable<ValidationFailure>>(400)
             .Produces<string>(404)
             .WithOpenApi();
@@ -76,6 +93,26 @@ public class GameEndpoints : IEndpoints
         return result.MatchCreated(
             GameStateEndpoints.BaseRoute,
             CustomResults.Problem);
+    }
+
+    internal static async Task<IResult> GetNextGaneration(
+        Guid gameId,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        var result = await sender.Send(new GetNextGameStateCommand(gameId), cancellationToken);
+
+        return result.Match(Results.Ok, CustomResults.Problem);
+    }
+
+    internal static async Task<IResult> GetFinalState(
+        Guid gameId,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        var result = await sender.Send(new GetNextGameStateCommand(gameId), cancellationToken);
+
+        return result.Match(Results.Ok, CustomResults.Problem);
     }
 
     internal static async Task<IResult> GetGameByIdAsync(

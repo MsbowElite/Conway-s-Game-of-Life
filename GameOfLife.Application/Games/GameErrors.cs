@@ -15,4 +15,12 @@ public static class GameErrors
     public static Error StateNotFound(Guid gameId) => Error.NotFound(
         "Game.GameStates.NotFound",
         $"The game with Id = '{gameId}', no GameState was found");
+
+    public static Error MaxAttemptsReached(Guid gameId, ushort maxNumberOfAttempts) => Error.Conflict(
+        "Game.ReachedMaxAttempts",
+        $"The game with Id = '{gameId}', reached the max number of attempts {maxNumberOfAttempts}, and have no conclusion");
+
+    public static Error FinalStateAlreadyReached(Guid gameId) => Error.Conflict(
+        "Games.Conflict",
+        $"The game with the Id = '{gameId}' has already reached the final state, you cannot create the next generation");
 }

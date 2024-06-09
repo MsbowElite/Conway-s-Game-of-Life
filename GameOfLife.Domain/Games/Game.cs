@@ -21,7 +21,7 @@ public sealed class Game : Entity
 
     public ushort Width { get; }
     public ushort Height { get; }
-    public Guid? FinalGameStateId { get; }
+    public Guid? FinalGameStateId { get; set; }
 
     public GameState? GameState { get; set; } = null;
 

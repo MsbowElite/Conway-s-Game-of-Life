@@ -8,7 +8,7 @@ namespace GameOfLife.Application.GameStates.GetById;
 
 public sealed record GetGameStateByIdQuery(Guid GameStateId) : IQuery<GameStateResponse> { }
 
-internal sealed class GetGameByIdQueryHandler(
+internal sealed class GetGameStateByIdQueryHandler(
     IGameStateRepository gameStateRepository)
     : IQueryHandler<GetGameStateByIdQuery, GameStateResponse>
 {
