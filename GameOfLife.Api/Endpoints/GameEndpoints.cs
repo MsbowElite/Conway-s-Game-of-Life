@@ -31,21 +31,21 @@ public class GameEndpoints : IEndpoints
             .Produces<IEnumerable<ValidationFailure>>(400)
             .WithOpenApi();
 
-        battles.MapPost($"{Slash}{{id}}{Slash}GameStates{Slash}NextGeneration", ExecuteNextGaneration)
+        battles.MapPost($"{Slash}{{gameId}}{Slash}GameStates{Slash}NextGeneration", ExecuteNextGaneration)
             .WithName("ExecuteNextGaneration")
             .Produces<Guid>(201)
             .Produces<IEnumerable<ValidationFailure>>(400)
             .Produces<string>(404)
             .WithOpenApi();
 
-        battles.MapGet($"{Slash}{{id}}", GetGameByIdAsync)
+        battles.MapGet($"{Slash}{{gameId}}", GetGameByIdAsync)
             .WithName("GetGame")
             .Produces<GameResponse>(200)
             .Produces<IEnumerable<ValidationFailure>>(400)
             .Produces<string>(404)
             .WithOpenApi();
 
-        battles.MapGet($"{Slash}{{id}}{Slash}GameStates{Slash}Generation{Slash}{{generationNumber}}", GetGameStateByGenerationAsync)
+        battles.MapGet($"{Slash}{{gameId}}{Slash}GameStates{Slash}Generation{Slash}{{generationNumber}}", GetGameStateByGenerationAsync)
             .WithName("GetGameStateByGeneration")
             .Produces<GameResponse>(200)
             .Produces<IEnumerable<ValidationFailure>>(400)

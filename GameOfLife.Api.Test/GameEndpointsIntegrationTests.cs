@@ -8,49 +8,37 @@ using System.Threading;
 
 namespace GameOfLife.Api.Test;
 
-[TestCaseOrderer("API.Test.AlphabeticalOrderer", "GameOfLife.Api.Test")]
+/// <summary>
+/// Execute only in sequence.
+/// </summary>
+[TestCaseOrderer("GameOfLife.Api.Test.AlphabeticalOrderer", "GameOfLife.Api.Test")]
 public class GameEndpointsIntegrationTests : IClassFixture<ApiApplicationFixture>
 {
-    private readonly ApiApplication _application;
-    private readonly Game _game;
+    private readonly HttpClient _httpClient;
+    private readonly CreateGameRequest _createGameRequest;
 
     public GameEndpointsIntegrationTests(ApiApplicationFixture apiApplicationFixture)
     {
-        _application = apiApplicationFixture.Application;
-        _game = apiApplicationFixture.Game;
+        _httpClient = apiApplicationFixture.Application.CreateClient();
+        _createGameRequest = apiApplicationFixture.CreateGameRequest;
     }
 
     [Fact]
     public async Task A_PostCreateGame_GetCreatedStatusWithId()
     {
-        using var client = _application.CreateClient();
-        var request = new CreateGameRequest(
-            100,
-            100,
-            [       
-                [0,0,0,0,0,0],
-                [0,0,0,0,0,0],
-                [0,0,1,1,0,0],
-                [0,0,1,1,0,0],
-                [0,0,0,0,0,0],
-                [0,0,0,0,0,0]
-            ]
-        );
-
-        var response = await client.PostAsJsonAsync("/games", request);
+        var response = await _httpClient.PostAsJsonAsync("/games", _createGameRequest);
         
-        var gameResponse = await HttpClientHelper.ReadJsonResponser<Guid>(response);
+        var game = await HttpClientHelper.ReadJsonResponser<Guid>(response);
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        Assert.IsType<Guid>(gameResponse);
+        Assert.IsType<Guid>(game);
     }
 
     [Fact]
     public async Task B_GetByIdReturnGame()
     {
-        using var client = _application.CreateClient();
-
-        var response = await client.GetAsync("/games");
+        var response = await _httpClient.GetAsync($"/games/{_createGameRequest.GameId}");
         var game = await HttpClientHelper.ReadJsonResponser<GameResponse>(response);
-        Assert.Equal(_game.Id, game.Id);
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(_createGameRequest.GameId, game.Id);
     }
 }

@@ -7,6 +7,7 @@ using GameOfLife.SharedKernel.Abstractions;
 namespace GameOfLife.Application.Games.Create;
 
 public sealed record CreateGameCommand(
+    Guid? GameId,
     ushort Width,
     ushort Height,
     ushort[][] State) : ICommand<Guid>;
@@ -22,7 +23,7 @@ internal sealed class CreateGameCommandHandler(
     CancellationToken cancellationToken)
     {
         var game = new Game(
-            Guid.NewGuid(),
+            command.GameId is null ? Guid.NewGuid() : command.GameId.Value,
             command.Width,
             command.Height);
 

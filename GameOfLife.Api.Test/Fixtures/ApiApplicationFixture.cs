@@ -1,21 +1,29 @@
-﻿using GameOfLife.Domain.Games;
+﻿using GameOfLife.Application.Games.Create;
+using GameOfLife.Domain.Games;
 
 namespace GameOfLife.Api.Test.Fixtures;
 
 public class ApiApplicationFixture : IDisposable
 {
     public ApiApplication Application;
-    public Game Game;
+    public CreateGameRequest CreateGameRequest;
 
     public ApiApplicationFixture()
     {
         Application = new ApiApplication();
 
-        Game = new(
+        CreateGameRequest = new CreateGameRequest(
             Guid.NewGuid(),
             100,
-            100
-
+            100,
+            [
+                [0,0,0,0,0,0],
+                [0,0,0,0,0,0],
+                [0,0,1,1,0,0],
+                [0,0,1,1,0,0],
+                [0,0,0,0,0,0],
+                [0,0,0,0,0,0]
+            ]
         );
     }
 

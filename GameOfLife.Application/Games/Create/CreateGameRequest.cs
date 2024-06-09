@@ -8,6 +8,7 @@
 /// than enough to store the population size and smaller than int
 /// </param>
 public sealed record CreateGameRequest(
+    Guid? GameId,
     ushort Width,
     ushort Height,
     ushort[][] State);
