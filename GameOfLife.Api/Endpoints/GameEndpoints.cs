@@ -7,6 +7,7 @@ using GameOfLife.Application.Games.Create;
 using GameOfLife.Application.Games.ExecuteNextStateGeneration;
 using GameOfLife.Application.Games.GetById;
 using GameOfLife.Application.Games.GetNextState;
+using GameOfLife.Application.Games.GetSkipAndNextState;
 using GameOfLife.Application.Games.GetStateByGeneration;
 using Mapster;
 using MediatR;
@@ -62,6 +63,13 @@ public class GameEndpoints : IEndpoints
             .Produces<string>(404)
             .WithOpenApi();
 
+        battles.MapGet($"{Slash}{{gameId}}{Slash}GameStates{Slash}Next{Slash}{{attempts}}{Slash}away", SkipAttempsAndGetGameState)
+            .WithName("SkipAttempsAndGetGameState")
+            .Produces<GameStateResponse>(200)
+            .Produces<IEnumerable<ValidationFailure>>(400)
+            .Produces<string>(404)
+            .WithOpenApi();
+
         battles.MapGet($"{Slash}{{gameId}}{Slash}GameStates{Slash}Generation{Slash}{{generationNumber}}", GetGameStateByGenerationAsync)
             .WithName("GetGameStateByGeneration")
             .Produces<GameResponse>(200)
@@ -111,6 +119,17 @@ public class GameEndpoints : IEndpoints
         CancellationToken cancellationToken)
     {
         var result = await sender.Send(new GetNextGameStateCommand(gameId), cancellationToken);
+
+        return result.Match(Results.Ok, CustomResults.Problem);
+    }
+
+    internal static async Task<IResult> SkipAttempsAndGetGameState(
+    Guid gameId,
+    ushort attempts,
+    ISender sender,
+    CancellationToken cancellationToken)
+    {
+        var result = await sender.Send(new GetSkipAndNextGameStateCommand(gameId, attempts), cancellationToken);
 
         return result.Match(Results.Ok, CustomResults.Problem);
     }

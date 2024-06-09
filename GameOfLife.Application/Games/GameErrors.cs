@@ -23,4 +23,8 @@ public static class GameErrors
     public static Error FinalStateAlreadyReached(Guid gameId) => Error.Conflict(
         "Games.Conflict",
         $"The game with the Id = '{gameId}' has already reached the final state, you cannot create the next generation");
+
+    public static Error CriticalFailure() => Error.Problem(
+        "Games.Critical",
+        $"Critical error occurred");
 }

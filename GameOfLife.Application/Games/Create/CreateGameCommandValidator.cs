@@ -6,11 +6,11 @@ namespace GameOfLife.Application.Games.Create
     {
         public CreateGameCommandValidator()
         {
-            RuleFor(game => game.Width)
+            RuleFor(c => c.Width)
                 .GreaterThan((ushort)0);
-            RuleFor(game => game.Height)
+            RuleFor(c => c.Height)
                 .GreaterThan((ushort)0);
-            RuleFor(game => game.State)
+            RuleFor(c => c.State)
                 .NotNull().NotEmpty();
         }
     }
