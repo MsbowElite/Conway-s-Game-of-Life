@@ -2,6 +2,7 @@
 using GameOfLife.Domain.GameStates;
 using GameOfLife.SharedKernel.Abstractions;
 using Microsoft.EntityFrameworkCore;
+using System.Data.Entity.Infrastructure.Annotations;
 
 namespace GameOfLife.Infrastructure.Database;
 
@@ -34,6 +35,8 @@ public class GameContext(DbContextOptions<GameContext> dbContextOptions)
                 .WithMany(e => e.GameStates)
                 .HasForeignKey(e => e.GameId)
                 .HasConstraintName("Game_FK");
+
+            entity.HasIndex(e => new { e.GameId, e.GenerationNumber }).IsUnique();
         });
     }
 }
