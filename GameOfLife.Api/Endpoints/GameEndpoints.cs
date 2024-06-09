@@ -74,7 +74,7 @@ public class GameEndpoints : IEndpoints
         var result = await sender.Send(new ExecuteNextGameStateGenerationCommand(gameId), cancellationToken);
 
         return result.MatchCreated(
-            BaseRoute,
+            GameStateEndpoints.BaseRoute,
             CustomResults.Problem);
     }
 

@@ -11,6 +11,11 @@ public sealed class GameStateRepository(GameContext context) : IGameStateReposit
         await context.GameStates.AddAsync(gameState, cancellationToken);
     }
 
+    public async Task<GameState> GetByIdAsync(Guid gameStateId, CancellationToken cancellationToken)
+    {
+        return await context.GameStates.FindAsync(gameStateId, cancellationToken);
+    }
+
     public async Task<GameState> GetByGameIdAndGenerationNumberAsync(
         Guid gameId, ushort generationNumber, CancellationToken cancellationToken)
     {

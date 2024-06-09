@@ -1,10 +1,8 @@
 using GameOfLife.Api.Test.Fixtures;
 using GameOfLife.Application.Games;
 using GameOfLife.Application.Games.Create;
-using GameOfLife.Domain.Games;
 using System.Net;
 using System.Net.Http.Json;
-using System.Threading;
 
 namespace GameOfLife.Api.Test;
 
@@ -27,7 +25,7 @@ public class GameEndpointsIntegrationTests : IClassFixture<ApiApplicationFixture
     public async Task A_PostCreateGame_GetCreatedStatusWithId()
     {
         var response = await _httpClient.PostAsJsonAsync("/games", _createGameRequest);
-        
+
         var game = await HttpClientHelper.ReadJsonResponser<Guid>(response);
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         Assert.IsType<Guid>(game);

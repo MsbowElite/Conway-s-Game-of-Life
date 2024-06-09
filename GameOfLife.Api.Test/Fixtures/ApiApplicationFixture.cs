@@ -1,5 +1,4 @@
 ﻿using GameOfLife.Application.Games.Create;
-using GameOfLife.Domain.Games;
 
 namespace GameOfLife.Api.Test.Fixtures;
 

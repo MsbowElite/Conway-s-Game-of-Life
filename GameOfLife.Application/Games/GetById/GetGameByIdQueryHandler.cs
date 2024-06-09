@@ -1,11 +1,23 @@
-﻿using GameOfLife.Application.Abstractions.Messaging;
+﻿using GameOfLife.Application.Abstractions.Caching;
+using GameOfLife.Application.Abstractions.Messaging;
 using GameOfLife.Domain.Games;
 using GameOfLife.SharedKernel;
 using Mapster;
 
 namespace GameOfLife.Application.Games.GetById;
 
-public sealed record GetGameByIdQuery(Guid GameId) : IQuery<GameResponse> { }
+/// <summary>
+/// Using caching for game query
+/// We must invalidate the cache when change DeletedAt or when fill the FinalGameStateId.
+/// Applying cache invalidation we can increase the cache time and make the information more reliable.
+/// </summary>
+/// <param name="GameId"></param>
+public sealed record GetGameByIdQuery(Guid GameId) : ICachedQuery<GameResponse> 
+{
+    public string CacheKey => $"game-by-id-{GameId}";
+
+    public TimeSpan? Expiration => TimeSpan.FromMinutes(5);
+}
 
 internal sealed class GetGameByIdQueryHandler(
     IGameRepository gameRepository)
