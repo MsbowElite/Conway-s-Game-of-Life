@@ -1,17 +1,15 @@
 ﻿using GameOfLife.Domain.GameStates;
 
-namespace GameOfLife.Api.Test.Fixtures;
+namespace GameOfLife.Application.Test.Fixtures;
 
 public static class GameStatesFixture
 {
-    public static IEnumerable<GameState> GetBattlesMock()
+    public static GameState GetGameState()
     {
-        var MonsterIdA = Guid.NewGuid();
         return
-        [
             new GameState(
                 Guid.NewGuid(),
-                Guid.NewGuid(),
+                GamesFixture.GetGameMock().Id,
                 [
                     [0,0,0,0,0,0],
                     [0,0,0,0,0,0],
@@ -20,7 +18,6 @@ public static class GameStatesFixture
                     [0,0,0,0,0,0],
                     [0,0,0,0,0,0]
                 ]
-            )
-        ];
+            );
     }
 }

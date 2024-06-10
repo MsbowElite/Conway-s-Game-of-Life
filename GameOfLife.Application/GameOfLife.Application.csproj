@@ -21,6 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
+  	<InternalsVisibleTo Include="GameOfLife.Application.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Abstractions\Behaviors\" />
     <Folder Include="Abstractions\Caching\" />
   </ItemGroup>
