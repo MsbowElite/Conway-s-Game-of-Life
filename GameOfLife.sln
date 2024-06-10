@@ -19,7 +19,12 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameOfLife.Api.Test", "GameOfLife.Api.Test\GameOfLife.Api.Test.csproj", "{AD16FEA3-DBB0-4F47-B390-ACD0E454DCEC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameOfLife.Application.Tests", "GameOfLife.Application.Tests\GameOfLife.Application.Tests.csproj", "{539C5F30-E74B-4F18-A43A-F8326F8FDDE5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameOfLife.Application.Tests", "GameOfLife.Application.Tests\GameOfLife.Application.Tests.csproj", "{539C5F30-E74B-4F18-A43A-F8326F8FDDE5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AAD95E88-8763-44E9-85B8-8B87809E20B5}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
