@@ -9,7 +9,7 @@ public sealed class GameState : Entity
     public GameState(
         Guid id,
         Guid gameId,
-        ushort[][] cellsState) : base(id)
+        bool[][] cellsState) : base(id)
     {
         GameId = gameId;
         State = JsonSerializer.Serialize(cellsState);
@@ -37,8 +37,8 @@ public sealed class GameState : Entity
 
     public void ExecuteNextGaneration()
     {
-        var gameSimulation = new GameStateSimulation(this);
-        State = gameSimulation.Next();
+        var gameSimulation = new GameStateSimulation(State);
+        State = gameSimulation.GetJson();
         GenerationNumber++;
     }
 }

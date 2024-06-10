@@ -4,85 +4,116 @@ namespace GameOfLife.Domain.GameStates
 {
     public class GameStateSimulation
     {
-        public int Width { get; }
-        public int Height { get; }
-        public ushort[][] Cells { get; private set; }
+        private int Width { get; }
+        private int Height { get; }
+        private bool[][] Cells { get; set; }
+        private bool[][] CellsFutureState { get; set; }
 
-        public GameStateSimulation(GameState gamesState)
+        public GameStateSimulation(string state)
         {
-            var currentState = JsonSerializer.Deserialize<ushort[][]>(gamesState.State);
+            Cells = JsonSerializer.Deserialize<bool[][]>(state);
 
-            Width = currentState.Length;
-            Height = currentState[0].Length;
+            Width = Cells.Length;
+            Height = Cells[0].Length;
 
-            Cells = new ushort[Width][];
+            CellsFutureState = new bool[Width][];
             for (int i = 0; i < Width; i++)
             {
-                Cells[i] = new ushort[Height];
-                Array.Copy(currentState[i], Cells[i], Height);
+                CellsFutureState[i] = new bool[Height];
             }
+
+            Next();
+        }
+
+        public string GetJson()
+        {
+            return JsonSerializer.Serialize(Cells);
         }
 
         private int LiveNeighbours(int x, int y)
         {
-            var liveNeighbours = 0;
-            for (var i = -1; i <= 1; i++)
-            {
-                for (var j = -1; j <= 1; j++)
-                {
-                    if (x + i < 0 || x + i >= Width)
-                        continue;
-                    if (y + j < 0 || y + j >= Height)
-                        continue;
-                    if (x + i == x && y + j == y)
-                        continue;
+            int NeighborsCount = 0;
+            int neighborPosX;
+            int neighborPosY;
 
-                    liveNeighbours += Cells[x + i][y + j] >= 1 ? 1 : 0;
+            for (int i = -1; i <= 1; i++)
+            {
+                for (int j = -1; j <= 1; j++)
+                {
+                    neighborPosX = x + i;
+
+                    if (neighborPosX >= Width)
+                    {
+                        neighborPosX = 0;
+                    }
+
+                    if (neighborPosX < 0)
+                    {
+                        neighborPosX = Width - 1;
+                    }
+
+                    neighborPosY = y + j;
+
+                    if (neighborPosY >= Height)
+                    {
+                        neighborPosY = 0;
+                    }
+
+                    if (neighborPosY < 0)
+                    {
+                        neighborPosY = Height - 1;
+                    }
+
+                    if (Cells[neighborPosX][neighborPosY] == true)
+                        NeighborsCount = NeighborsCount + 1;
                 }
             }
 
-            return liveNeighbours;
+            if (Cells[x][y] == true)
+                NeighborsCount = NeighborsCount - 1;
+
+            return NeighborsCount;
         }
 
-        public string Next()
+        private void Next()
         {
-            var cells = new ushort[Width][];
-            for (var i = 0; i < Width; i++)
+            for (int i = 0; i < Width; i++)
             {
-                cells[i] = new ushort[Height];
-            }
-
-            for (var x = 0; x < Width; x++)
-            {
-                for (var y = 0; y < Height; y++)
+                for (int j = 0; j < Height; j++)
                 {
-                    var liveNeighbours = LiveNeighbours(x, y);
-                    var age = Cells[x][y];
+                    int NbVoisin = LiveNeighbours(i, j);
 
-                    if (liveNeighbours == 3)
+                    if (NbVoisin <= 1)
                     {
-                        if (age > 8)
-                        {
-                            cells[x][y] = 0;
-                        }
-                        else
-                        {
-                            cells[x][y] = (ushort)(age + 1);
-                        }
+                        CellsFutureState[i][j] = false;
                     }
-                    else if (liveNeighbours == 2)
+                    else if (NbVoisin == 2)
                     {
-                        cells[x][y] = age;
+                        CellsFutureState[i][j] = Cells[i][j];
+                    }
+                    else if (NbVoisin == 3)
+                    {
+                        CellsFutureState[i][j] = true;
                     }
                     else
                     {
-                        cells[x][y] = 0;
+                        CellsFutureState[i][j] = false;
                     }
                 }
             }
 
-            Cells = cells;
-            return JsonSerializer.Serialize(Cells);
+            transferBoolArray();
+        }
+
+        private void transferBoolArray()
+        {
+            for (int i = 0; i < Width; i++)
+            {
+                for (int j = 0; j < Height; j++)
+                {
+                    Cells[i][j] = CellsFutureState[i][j];
+                }
+            }
         }
     }
 }

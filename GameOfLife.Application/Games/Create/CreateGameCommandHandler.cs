@@ -10,7 +10,7 @@ public sealed record CreateGameCommand(
     Guid? GameId,
     ushort Width,
     ushort Height,
-    ushort[][] State) : ICommand<Guid>;
+    bool[][] State) : ICommand<Guid>;
 
 internal sealed class CreateGameCommandHandler(
     IGameRepository gameRepository,
