@@ -1,6 +1,8 @@
 using GameOfLife.Api.Test.Fixtures;
 using GameOfLife.Application.Games;
 using GameOfLife.Application.Games.Create;
+using GameOfLife.SharedKernel;
+using Microsoft.AspNetCore.Http;
 using System.Net;
 using System.Net.Http.Json;
 
@@ -32,7 +34,17 @@ public class GameEndpointsIntegrationTests : IClassFixture<ApiApplicationFixture
     }
 
     [Fact]
-    public async Task B_GetByIdReturnGame()
+    public async Task B_PostCreateGame_WithIdThatAlreadyExist_GetConflictError409WithErrorDescription()
+    {
+        var response = await _httpClient.PostAsJsonAsync("/games", _createGameRequest);
+
+        var errorResult = await HttpClientHelper.ReadJsonResponser<Result>(response);
+        Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
+        Assert.IsType<Result>(errorResult);
+    }
+
+    [Fact]
+    public async Task C_GetByIdReturnGame()
     {
         var response = await _httpClient.GetAsync($"/games/{_createGameRequest.GameId}");
         var game = await HttpClientHelper.ReadJsonResponser<GameResponse>(response);

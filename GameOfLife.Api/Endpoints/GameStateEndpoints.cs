@@ -4,6 +4,7 @@ using GameOfLife.Api.Infrastructure;
 using GameOfLife.Application.Extensions;
 using GameOfLife.Application.Games;
 using GameOfLife.Application.GameStates.GetById;
+using GameOfLife.SharedKernel;
 using MediatR;
 
 namespace GameOfLife.Api.Endpoints;
@@ -24,7 +25,7 @@ public class GameStateEndpoints : IEndpoints
             .WithName("GetGameState")
             .Produces<GameStateResponse>(200)
             .Produces<IEnumerable<ValidationFailure>>(400)
-            .Produces<string>(404)
+            .Produces<Result>(404)
             .WithOpenApi();
     }
 
