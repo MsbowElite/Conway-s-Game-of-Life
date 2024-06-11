@@ -27,6 +27,9 @@ internal sealed class CreateGameCommandHandler(
             command.Width,
             command.Height);
 
+        if(await gameRepository.AnyByIdAsync(game.Id, cancellationToken))
+            return Result.Failure<Guid>(GameErrors.GameAlreadyExist(game.Id));
+
         var gameState = new GameState(
             Guid.NewGuid(),
             game.Id,

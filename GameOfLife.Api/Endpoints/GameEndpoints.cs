@@ -9,6 +9,7 @@ using GameOfLife.Application.Games.GetById;
 using GameOfLife.Application.Games.GetNextState;
 using GameOfLife.Application.Games.GetSkipAndNextState;
 using GameOfLife.Application.Games.GetStateByGeneration;
+using GameOfLife.SharedKernel;
 using Mapster;
 using MediatR;
 
@@ -37,44 +38,44 @@ public class GameEndpoints : IEndpoints
             .WithName("ExecuteNextGaneration")
             .Produces<Guid>(201)
             .Produces<IEnumerable<ValidationFailure>>(400)
-            .Produces<string>(404)
-            .Produces<string>(409)
+            .Produces<Result>(404)
+            .Produces<Result>(409)
             .WithOpenApi();
 
         battles.MapGet($"{Slash}{{gameId}}{Slash}GameStates{Slash}Next", GetNextGaneration)
             .WithName("GetNextGaneration")
             .Produces<GameStateResponse>(200)
             .Produces<IEnumerable<ValidationFailure>>(400)
-            .Produces<string>(404)
-            .Produces<string>(409)
+            .Produces<Result>(404)
+            .Produces<Result>(409)
             .WithOpenApi();
 
         battles.MapGet($"{Slash}{{gameId}}", GetGameByIdAsync)
             .WithName("GetGame")
             .Produces<GameResponse>(200)
             .Produces<IEnumerable<ValidationFailure>>(400)
-            .Produces<string>(404)
+            .Produces<Result>(404)
             .WithOpenApi();
 
         battles.MapGet($"{Slash}{{gameId}}{Slash}GameStates{Slash}Final", GetFinalState)
             .WithName("GetFinalState")
             .Produces<GameStateResponse>(200)
             .Produces<IEnumerable<ValidationFailure>>(400)
-            .Produces<string>(404)
+            .Produces<Result>(404)
             .WithOpenApi();
 
         battles.MapGet($"{Slash}{{gameId}}{Slash}GameStates{Slash}Next{Slash}{{attempts}}{Slash}away", SkipAttempsAndGetGameState)
             .WithName("SkipAttempsAndGetGameState")
             .Produces<GameStateResponse>(200)
             .Produces<IEnumerable<ValidationFailure>>(400)
-            .Produces<string>(404)
+            .Produces<Result>(404)
             .WithOpenApi();
 
         battles.MapGet($"{Slash}{{gameId}}{Slash}GameStates{Slash}Generation{Slash}{{generationNumber}}", GetGameStateByGenerationAsync)
             .WithName("GetGameStateByGeneration")
             .Produces<GameResponse>(200)
             .Produces<IEnumerable<ValidationFailure>>(400)
-            .Produces<string>(404)
+            .Produces<Result>(404)
             .WithOpenApi();
     }
 
