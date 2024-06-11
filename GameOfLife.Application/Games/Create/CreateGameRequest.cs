@@ -11,4 +11,4 @@ public sealed record CreateGameRequest(
     Guid? GameId,
     ushort Width,
     ushort Height,
-    ushort[][] State);
+    bool[][] State);
