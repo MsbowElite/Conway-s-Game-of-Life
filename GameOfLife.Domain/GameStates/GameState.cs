@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace GameOfLife.Domain.GameStates;
 
-public sealed class GameState : Entity
+public sealed partial class GameState : Entity
 {
     public GameState(
         Guid id,
@@ -37,8 +37,103 @@ public sealed class GameState : Entity
 
     public void ExecuteNextGaneration()
     {
-        var gameSimulation = new GameStateSimulation(State);
-        State = gameSimulation.GetJson();
+        bool[][] cells;
+        bool[][] cellsFutureState;
+
+        cells = JsonSerializer.Deserialize<bool[][]>(State);
+        var width = cells.Length;
+        var height = cells[0].Length;
+
+        cellsFutureState = new bool[width][];
+        for (int i = 0; i < width; i++)
+        {
+            cellsFutureState[i] = new bool[height];
+        }
+
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                int NbVoisin = liveNeighbours(i, j);
+
+                if (NbVoisin <= 1)
+                {
+                    cellsFutureState[i][j] = false;
+                }
+                else if (NbVoisin == 2)
+                {
+                    cellsFutureState[i][j] = cells[i][j];
+                }
+                else if (NbVoisin == 3)
+                {
+                    cellsFutureState[i][j] = true;
+                }
+                else
+                {
+                    cellsFutureState[i][j] = false;
+                }
+            }
+        }
+
+        transferBoolArray();
+        State = JsonSerializer.Serialize(cells);
         GenerationNumber++;
+
+        #region Local Functions
+        int liveNeighbours(int x, int y)
+        {
+            int NeighborsCount = 0;
+            int neighborPosX;
+            int neighborPosY;
+
+            for (int i = -1; i <= 1; i++)
+            {
+                for (int j = -1; j <= 1; j++)
+                {
+                    neighborPosX = x + i;
+
+                    if (neighborPosX >= width)
+                    {
+                        neighborPosX = 0;
+                    }
+
+                    if (neighborPosX < 0)
+                    {
+                        neighborPosX = width - 1;
+                    }
+
+                    neighborPosY = y + j;
+
+                    if (neighborPosY >= height)
+                    {
+                        neighborPosY = 0;
+                    }
+
+                    if (neighborPosY < 0)
+                    {
+                        neighborPosY = height - 1;
+                    }
+
+                    if (cells[neighborPosX][neighborPosY] == true)
+                        NeighborsCount = NeighborsCount + 1;
+                }
+            }
+
+            if (cells[x][y] == true)
+                NeighborsCount = NeighborsCount - 1;
+
+            return NeighborsCount;
+        }
+        void transferBoolArray()
+        {
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    cells[i][j] = cellsFutureState[i][j];
+                }
+            }
+        }
+        #endregion
     }
 }

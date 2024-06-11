@@ -34,7 +34,7 @@ public class GameEndpointsIntegrationTests : IClassFixture<ApiApplicationFixture
     }
 
     [Fact]
-    public async Task B_PostCreateGame_WithIdThatAlreadyExist_GetConflictError409WithErrorDescription()
+    public async Task B_PostCreateGame_WithIdThatAlreadyExist_ReturnErrorConflict()
     {
         var response = await _httpClient.PostAsJsonAsync("/games", _createGameRequest);
 
@@ -50,5 +50,14 @@ public class GameEndpointsIntegrationTests : IClassFixture<ApiApplicationFixture
         var game = await HttpClientHelper.ReadJsonResponser<GameResponse>(response);
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Equal(_createGameRequest.GameId, game.Id);
+    }
+
+    [Fact]
+    public async Task D_GetByIdThatNotExist_ReturnErrorNotFound()
+    {
+        var response = await _httpClient.GetAsync($"/games/{Guid.NewGuid()}");
+        var errorResult = await HttpClientHelper.ReadJsonResponser<Result>(response);
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        Assert.IsType<Result>(errorResult);
     }
 }
