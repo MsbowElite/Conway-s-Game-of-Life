@@ -32,6 +32,8 @@ public class GameEndpoints : IEndpoints
             .Accepts<CreateGameRequest>(ContentType)
             .Produces<Guid>(201)
             .Produces<IEnumerable<ValidationFailure>>(400)
+            .Produces<Result>(409)
+            .Produces<Result>(500)
             .WithOpenApi();
 
         battles.MapPost($"{Slash}{{gameId}}{Slash}GameStates{Slash}Next", ExecuteNextGaneration)
@@ -40,6 +42,7 @@ public class GameEndpoints : IEndpoints
             .Produces<IEnumerable<ValidationFailure>>(400)
             .Produces<Result>(404)
             .Produces<Result>(409)
+            .Produces<Result>(500)
             .WithOpenApi();
 
         battles.MapGet($"{Slash}{{gameId}}{Slash}GameStates{Slash}Next", GetNextGaneration)
@@ -48,6 +51,7 @@ public class GameEndpoints : IEndpoints
             .Produces<IEnumerable<ValidationFailure>>(400)
             .Produces<Result>(404)
             .Produces<Result>(409)
+            .Produces<Result>(500)
             .WithOpenApi();
 
         battles.MapGet($"{Slash}{{gameId}}", GetGameByIdAsync)
@@ -55,6 +59,7 @@ public class GameEndpoints : IEndpoints
             .Produces<GameResponse>(200)
             .Produces<IEnumerable<ValidationFailure>>(400)
             .Produces<Result>(404)
+            .Produces<Result>(500)
             .WithOpenApi();
 
         battles.MapGet($"{Slash}{{gameId}}{Slash}GameStates{Slash}Final", GetFinalState)
@@ -62,6 +67,7 @@ public class GameEndpoints : IEndpoints
             .Produces<GameStateResponse>(200)
             .Produces<IEnumerable<ValidationFailure>>(400)
             .Produces<Result>(404)
+            .Produces<Result>(500)
             .WithOpenApi();
 
         battles.MapGet($"{Slash}{{gameId}}{Slash}GameStates{Slash}Next{Slash}{{attempts}}{Slash}away", SkipAttempsAndGetGameState)
@@ -69,6 +75,7 @@ public class GameEndpoints : IEndpoints
             .Produces<GameStateResponse>(200)
             .Produces<IEnumerable<ValidationFailure>>(400)
             .Produces<Result>(404)
+            .Produces<Result>(500)
             .WithOpenApi();
 
         battles.MapGet($"{Slash}{{gameId}}{Slash}GameStates{Slash}Generation{Slash}{{generationNumber}}", GetGameStateByGenerationAsync)
@@ -76,6 +83,7 @@ public class GameEndpoints : IEndpoints
             .Produces<GameResponse>(200)
             .Produces<IEnumerable<ValidationFailure>>(400)
             .Produces<Result>(404)
+            .Produces<Result>(500)
             .WithOpenApi();
     }
 
