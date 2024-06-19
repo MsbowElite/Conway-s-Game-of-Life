@@ -1,8 +1,10 @@
+using FluentValidation.Results;
 using GameOfLife.Api.Test.Fixtures;
 using GameOfLife.Application.Games;
 using GameOfLife.Application.Games.Create;
 using GameOfLife.SharedKernel;
 using Microsoft.AspNetCore.Http;
+using System.Collections;
 using System.Net;
 using System.Net.Http.Json;
 
@@ -24,7 +26,7 @@ public class GameEndpointsIntegrationTests : IClassFixture<ApiApplicationFixture
     }
 
     [Fact]
-    public async Task A_PostCreateGame_GetCreatedStatusWithId()
+    public async Task A_0_PostCreateGame_GetCreatedStatusWithId()
     {
         var response = await _httpClient.PostAsJsonAsync("/games", _createGameRequest);
 
@@ -34,7 +36,24 @@ public class GameEndpointsIntegrationTests : IClassFixture<ApiApplicationFixture
     }
 
     [Fact]
-    public async Task B_PostCreateGame_WithIdThatAlreadyExist_ReturnErrorConflict()
+    public async Task A_1_PostCreateGame_WithZeroWidthHeight_GetBadRequestValidationWithDescription()
+    {
+        var request = new CreateGameRequest(
+            _createGameRequest.GameId,
+            0,
+            0,
+            _createGameRequest.State
+            );
+
+        var response = await _httpClient.PostAsJsonAsync("/games", request);
+
+        var errorResult = await HttpClientHelper.ReadJsonResponser<Result>(response);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.IsType<Result>(errorResult);
+    }
+
+    [Fact]
+    public async Task A_2_PostCreateGame_WithDuplicatedId_GetConflict()
     {
         var response = await _httpClient.PostAsJsonAsync("/games", _createGameRequest);
 
@@ -44,7 +63,17 @@ public class GameEndpointsIntegrationTests : IClassFixture<ApiApplicationFixture
     }
 
     [Fact]
-    public async Task C_GetByIdReturnGame()
+    public async Task C_PostCreateGame_WithIdThatAlreadyExist_ReturnErrorConflict()
+    {
+        var response = await _httpClient.PostAsJsonAsync("/games", _createGameRequest);
+
+        var errorResult = await HttpClientHelper.ReadJsonResponser<Result>(response);
+        Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
+        Assert.IsType<Result>(errorResult);
+    }
+
+    [Fact]
+    public async Task D_GetByIdReturnGame()
     {
         var response = await _httpClient.GetAsync($"/games/{_createGameRequest.GameId}");
         var game = await HttpClientHelper.ReadJsonResponser<GameResponse>(response);
@@ -53,7 +82,7 @@ public class GameEndpointsIntegrationTests : IClassFixture<ApiApplicationFixture
     }
 
     [Fact]
-    public async Task D_GetByIdThatNotExist_ReturnErrorNotFound()
+    public async Task F_GetByIdThatNotExist_ReturnErrorNotFound()
     {
         var response = await _httpClient.GetAsync($"/games/{Guid.NewGuid()}");
         var errorResult = await HttpClientHelper.ReadJsonResponser<Result>(response);
