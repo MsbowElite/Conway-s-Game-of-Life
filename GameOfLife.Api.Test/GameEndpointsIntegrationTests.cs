@@ -63,7 +63,7 @@ public class GameEndpointsIntegrationTests : IClassFixture<ApiApplicationFixture
     }
 
     [Fact]
-    public async Task C_PostCreateGame_WithIdThatAlreadyExist_ReturnErrorConflict()
+    public async Task A_3_PostCreateGame_WithIdThatAlreadyExist_ReturnErrorConflict()
     {
         var response = await _httpClient.PostAsJsonAsync("/games", _createGameRequest);
 
@@ -73,7 +73,7 @@ public class GameEndpointsIntegrationTests : IClassFixture<ApiApplicationFixture
     }
 
     [Fact]
-    public async Task D_GetByIdReturnGame()
+    public async Task B_0_GetByIdReturnGame()
     {
         var response = await _httpClient.GetAsync($"/games/{_createGameRequest.GameId}");
         var game = await HttpClientHelper.ReadJsonResponser<GameResponse>(response);
@@ -82,11 +82,31 @@ public class GameEndpointsIntegrationTests : IClassFixture<ApiApplicationFixture
     }
 
     [Fact]
-    public async Task F_GetByIdThatNotExist_ReturnErrorNotFound()
+    public async Task B_1_GetByIdThatNotExist_ReturnErrorNotFound()
     {
         var response = await _httpClient.GetAsync($"/games/{Guid.NewGuid()}");
         var errorResult = await HttpClientHelper.ReadJsonResponser<Result>(response);
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         Assert.IsType<Result>(errorResult);
+    }
+
+    [Fact]
+    public async Task C_0_ExecuteNextGaneration_ValidInput_ReturnIdOfNewGameState()
+    {
+        var response = await _httpClient.PostAsJsonAsync($"/games/{_createGameRequest.GameId}/GameStates/Next", string.Empty);
+
+        var result = await HttpClientHelper.ReadJsonResponser<Guid>(response);
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+        Assert.IsType<Guid>(result);
+    }
+
+    [Fact]
+    public async Task C_1_ExecuteNextGaneration_EmptyGameId_GetBadRequestValidationWithDescription()
+    {
+        var response = await _httpClient.PostAsJsonAsync($"/games/{Guid.Empty}/GameStates/Next", string.Empty);
+
+        var result = await HttpClientHelper.ReadJsonResponser<Result>(response);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.IsType<Result>(result);
     }
 }

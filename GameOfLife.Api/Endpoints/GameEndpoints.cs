@@ -36,6 +36,14 @@ public class GameEndpoints : IEndpoints
             .Produces<Result>(500)
             .WithOpenApi();
 
+        battles.MapGet($"{Slash}{{gameId}}", GetGameByIdAsync)
+            .WithName("GetGame")
+            .Produces<GameResponse>(200)
+            .Produces<IEnumerable<ValidationFailure>>(400)
+            .Produces<Result>(404)
+            .Produces<Result>(500)
+            .WithOpenApi();
+
         battles.MapPost($"{Slash}{{gameId}}{Slash}GameStates{Slash}Next", ExecuteNextGaneration)
             .WithName("ExecuteNextGaneration")
             .Produces<Guid>(201)
@@ -51,14 +59,6 @@ public class GameEndpoints : IEndpoints
             .Produces<IEnumerable<ValidationFailure>>(400)
             .Produces<Result>(404)
             .Produces<Result>(409)
-            .Produces<Result>(500)
-            .WithOpenApi();
-
-        battles.MapGet($"{Slash}{{gameId}}", GetGameByIdAsync)
-            .WithName("GetGame")
-            .Produces<GameResponse>(200)
-            .Produces<IEnumerable<ValidationFailure>>(400)
-            .Produces<Result>(404)
             .Produces<Result>(500)
             .WithOpenApi();
 

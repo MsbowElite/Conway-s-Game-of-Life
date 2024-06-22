@@ -54,17 +54,17 @@ public sealed partial class GameState : Entity
         {
             for (int j = 0; j < height; j++)
             {
-                int NbVoisin = liveNeighbours(i, j);
+                int neighboursLiveCount = liveNeighbours(i, j);
 
-                if (NbVoisin <= 1)
+                if (neighboursLiveCount <= 1)
                 {
                     cellsFutureState[i][j] = false;
                 }
-                else if (NbVoisin == 2)
+                else if (neighboursLiveCount == 2)
                 {
                     cellsFutureState[i][j] = cells[i][j];
                 }
-                else if (NbVoisin == 3)
+                else if (neighboursLiveCount == 3)
                 {
                     cellsFutureState[i][j] = true;
                 }
@@ -80,6 +80,7 @@ public sealed partial class GameState : Entity
         GenerationNumber++;
 
         #region Local Functions
+        //Analyze all lives around
         int liveNeighbours(int x, int y)
         {
             int NeighborsCount = 0;
