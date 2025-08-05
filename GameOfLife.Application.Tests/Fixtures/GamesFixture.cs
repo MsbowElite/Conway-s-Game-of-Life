@@ -4,14 +4,10 @@ namespace GameOfLife.Application.Test.Fixtures;
 
 public static class GamesFixture
 {
-    public static Game GetGameMock()
-    {
-        return
-            new Game(
+    public static Game GetGameMock() => new(
                 new Guid(),
                 100,
                 100
             )
         ;
-    }
 }

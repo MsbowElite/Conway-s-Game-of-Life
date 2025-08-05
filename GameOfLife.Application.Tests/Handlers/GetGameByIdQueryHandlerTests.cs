@@ -5,6 +5,7 @@ using GameOfLife.Application.Test.Fixtures;
 using GameOfLife.Application.Tests.Repositories;
 using GameOfLife.Domain.Games;
 using GameOfLife.Domain.GameStates;
+using GameOfLife.SharedKernel;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -19,10 +20,7 @@ public class GetGameByIdQueryHandlerTests
 {
     private readonly IGameRepository _gameRepository;
 
-    public GetGameByIdQueryHandlerTests()
-    {
-        _gameRepository = new FakeGameRepository();
-    }
+    public GetGameByIdQueryHandlerTests() => _gameRepository = new FakeGameRepository();
 
     [Fact]
     public async Task If_TryToGetExistingGame_ReturnGame()
@@ -30,7 +28,7 @@ public class GetGameByIdQueryHandlerTests
         var getGameByIdQuery = new GetGameByIdQuery(GamesFixture.GetGameMock().Id);
         var getGameByIdQueryHandler = new GetGameByIdQueryHandler(_gameRepository);
 
-        var result = await getGameByIdQueryHandler.Handle(getGameByIdQuery, default);
+        Result<GameResponse> result = await getGameByIdQueryHandler.Handle(getGameByIdQuery, default);
 
         Assert.NotNull(result);
         Assert.True(result.IsSuccess);
@@ -44,7 +42,7 @@ public class GetGameByIdQueryHandlerTests
         var getGameByIdQuery = new GetGameByIdQuery(id);
         var getGameByIdQueryHandler = new GetGameByIdQueryHandler(_gameRepository);
 
-        var result = await getGameByIdQueryHandler.Handle(getGameByIdQuery, default);
+        Result<GameResponse> result = await getGameByIdQueryHandler.Handle(getGameByIdQuery, default);
 
         Assert.NotNull(result);
         Assert.True(result.IsFailure);

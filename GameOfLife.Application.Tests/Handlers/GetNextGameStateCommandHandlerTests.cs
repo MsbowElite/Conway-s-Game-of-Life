@@ -30,7 +30,7 @@ public class GetNextGameStateCommandHandlerTests
             .Returns(Task.FromResult(GameStatesFixture.GetGameState()));
 
         var getNextGameStateCommandHandler = new GetNextGameStateCommandHandler(_gameStateRepository.Object, _sender.Object);
-        var result = await getNextGameStateCommandHandler.Handle(
+        Result<object> result = await getNextGameStateCommandHandler.Handle(
             new GetNextGameStateCommand(GamesFixture.GetGameMock().Id),
             default);
 

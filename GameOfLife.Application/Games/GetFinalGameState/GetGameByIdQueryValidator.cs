@@ -1,13 +1,9 @@
 ﻿using FluentValidation;
 
-namespace GameOfLife.Application.Games.GetFinalGameState
+namespace GameOfLife.Application.Games.GetFinalGameState;
+
+internal sealed class GetFinalGameStateQueryValidator : AbstractValidator<GetFinalGameStateQuery>
 {
-    internal sealed class GetFinalGameStateQueryValidator : AbstractValidator<GetFinalGameStateQuery>
-    {
-        public GetFinalGameStateQueryValidator()
-        {
-            RuleFor(c => c.GameId)
-                .NotEmpty();
-        }
-    }
+    public GetFinalGameStateQueryValidator() => RuleFor(c => c.GameId)
+            .NotEmpty();
 }

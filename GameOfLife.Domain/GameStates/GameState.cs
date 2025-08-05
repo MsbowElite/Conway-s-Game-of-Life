@@ -41,8 +41,8 @@ public sealed partial class GameState : Entity
         bool[][] cellsFutureState;
 
         cells = JsonSerializer.Deserialize<bool[][]>(State);
-        var width = cells.Length;
-        var height = cells[0].Length;
+        int width = cells.Length;
+        int height = cells[0].Length;
 
         cellsFutureState = new bool[width][];
         for (int i = 0; i < width; i++)
@@ -56,22 +56,8 @@ public sealed partial class GameState : Entity
             {
                 int neighboursLiveCount = liveNeighbours(i, j);
 
-                if (neighboursLiveCount <= 1)
-                {
-                    cellsFutureState[i][j] = false;
-                }
-                else if (neighboursLiveCount == 2)
-                {
-                    cellsFutureState[i][j] = cells[i][j];
-                }
-                else if (neighboursLiveCount == 3)
-                {
-                    cellsFutureState[i][j] = true;
-                }
-                else
-                {
-                    cellsFutureState[i][j] = false;
-                }
+                cellsFutureState[i][j] = neighboursLiveCount > 1 && 
+                    (neighboursLiveCount == 2 ? cells[i][j] : neighboursLiveCount == 3);
             }
         }
 
@@ -115,13 +101,13 @@ public sealed partial class GameState : Entity
                         neighborPosY = height - 1;
                     }
 
-                    if (cells[neighborPosX][neighborPosY] == true)
-                        NeighborsCount = NeighborsCount + 1;
+                    if (cells[neighborPosX][neighborPosY])
+                        NeighborsCount++;
                 }
             }
 
-            if (cells[x][y] == true)
-                NeighborsCount = NeighborsCount - 1;
+            if (cells[x][y])
+                NeighborsCount--;
 
             return NeighborsCount;
         }

@@ -19,11 +19,11 @@ internal sealed class GetNextGameStateCommandHandler(
     GetNextGameStateCommand command,
     CancellationToken cancellationToken)
     {
-        var result = await sender.Send(new ExecuteNextGameStateGenerationCommand(command.GameId), cancellationToken);
+        Result<Guid> result = await sender.Send(new ExecuteNextGameStateGenerationCommand(command.GameId), cancellationToken);
         if (result.IsFailure)
             return result;
 
-        var gameState = await gameStateRepository.GetByIdAsync(result.Value, cancellationToken);
+        GameState gameState = await gameStateRepository.GetByIdAsync(result.Value, cancellationToken);
 
         return gameState.Adapt<GameStateResponse>();
     }

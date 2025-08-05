@@ -7,7 +7,7 @@ using GameOfLife.SharedKernel;
 using Microsoft.Extensions.Options;
 using Serilog;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog((context, loggerConfig) =>
     loggerConfig.ReadFrom.Configuration(context.Configuration));
@@ -20,7 +20,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
-var gameStateConfigSection = builder.Configuration.GetSection(nameof(GameStateConfig));
+IConfigurationSection gameStateConfigSection = builder.Configuration.GetSection(nameof(GameStateConfig));
 var gameStateConfigSettings = new GameStateConfig();
 new ConfigureFromConfigurationOptions<GameStateConfig>(gameStateConfigSection)
     .Configure(gameStateConfigSettings);
@@ -30,7 +30,7 @@ builder.Services
     .AddApplication()
     .AddInfrastructure(builder.Configuration);
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 app.UseEndpoints<Program>();
 

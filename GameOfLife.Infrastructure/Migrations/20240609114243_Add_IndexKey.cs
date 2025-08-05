@@ -2,36 +2,35 @@
 
 #nullable disable
 
-namespace GameOfLife.Infrastructure.Migrations
+namespace GameOfLife.Infrastructure.Migrations;
+
+/// <inheritdoc />
+public partial class Add_IndexKey : Migration
 {
     /// <inheritdoc />
-    public partial class Add_IndexKey : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropIndex(
-                name: "IX_GameStates_GameId",
-                table: "GameStates");
+        migrationBuilder.DropIndex(
+            name: "IX_GameStates_GameId",
+            table: "GameStates");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_GameStates_GameId_GenerationNumber",
-                table: "GameStates",
-                columns: new[] { "GameId", "GenerationNumber" },
-                unique: true);
-        }
+        migrationBuilder.CreateIndex(
+            name: "IX_GameStates_GameId_GenerationNumber",
+            table: "GameStates",
+            columns: new[] { "GameId", "GenerationNumber" },
+            unique: true);
+    }
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropIndex(
-                name: "IX_GameStates_GameId_GenerationNumber",
-                table: "GameStates");
+    /// <inheritdoc />
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.DropIndex(
+            name: "IX_GameStates_GameId_GenerationNumber",
+            table: "GameStates");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_GameStates_GameId",
-                table: "GameStates",
-                column: "GameId");
-        }
+        migrationBuilder.CreateIndex(
+            name: "IX_GameStates_GameId",
+            table: "GameStates",
+            column: "GameId");
     }
 }

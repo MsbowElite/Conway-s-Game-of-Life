@@ -14,10 +14,7 @@ public sealed class Game : Entity
         Height = height;
     }
 
-    private Game()
-    {
-        GameStates = [];
-    }
+    private Game() => GameStates = [];
 
     public ushort Width { get; }
     public ushort Height { get; }

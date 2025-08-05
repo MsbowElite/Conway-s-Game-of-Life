@@ -6,29 +6,17 @@ namespace GameOfLife.Infrastructure.Repositories;
 
 public sealed class GameStateRepository(GameContext context) : IGameStateRepository
 {
-    public async Task InsertAsync(GameState gameState, CancellationToken cancellationToken)
-    {
-        await context.GameStates.AddAsync(gameState, cancellationToken);
-    }
+    public async Task InsertAsync(GameState gameState, CancellationToken cancellationToken) => await context.GameStates.AddAsync(gameState, cancellationToken);
 
-    public async Task<GameState> GetByIdAsync(Guid gameStateId, CancellationToken cancellationToken)
-    {
-        return await context.GameStates.FindAsync(gameStateId, cancellationToken);
-    }
+    public async Task<GameState> GetByIdAsync(Guid gameStateId, CancellationToken cancellationToken) => await context.GameStates.FindAsync(gameStateId, cancellationToken);
 
     public async Task<GameState> GetByGameIdAndGenerationNumberAsync(
-        Guid gameId, ushort generationNumber, CancellationToken cancellationToken)
-    {
-        return await context.GameStates.Where(
+        Guid gameId, ushort generationNumber, CancellationToken cancellationToken) => await context.GameStates.Where(
             gs => gs.GameId == gameId && gs.GenerationNumber == generationNumber)
             .FirstOrDefaultAsync(cancellationToken);
-    }
 
-    public async Task<GameState> GetLastByGameId(Guid gameId, CancellationToken cancellationToken)
-    {
-        return await context.GameStates.Where(
+    public async Task<GameState> GetLastByGameId(Guid gameId, CancellationToken cancellationToken) => await context.GameStates.Where(
             gs => gs.GameId == gameId)
             .OrderBy(gs => gs.GenerationNumber)
             .LastOrDefaultAsync(cancellationToken);
-    }
 }

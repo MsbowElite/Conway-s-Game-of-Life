@@ -1,7 +1,6 @@
-﻿namespace GameOfLife.Api.Endpoints.Internal
+﻿namespace GameOfLife.Api.Endpoints.Internal;
+
+public interface IEndpoints
 {
-    public interface IEndpoints
-    {
-        public static abstract void DefineEndpoints(IEndpointRouteBuilder app);
-    }
+    abstract static void DefineEndpoints(IEndpointRouteBuilder app);
 }

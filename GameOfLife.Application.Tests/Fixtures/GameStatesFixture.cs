@@ -2,12 +2,9 @@
 
 namespace GameOfLife.Application.Test.Fixtures;
 
-public static class GameStatesFixture
+internal static class GameStatesFixture
 {
-    public static GameState GetGameState()
-    {
-        return
-            new GameState(
+    public static GameState GetGameState() => new(
                 Guid.NewGuid(),
                 GamesFixture.GetGameMock().Id,
                 [
@@ -19,5 +16,4 @@ public static class GameStatesFixture
                     [false,false,false,false,false,false]
                 ]
             );
-    }
 }

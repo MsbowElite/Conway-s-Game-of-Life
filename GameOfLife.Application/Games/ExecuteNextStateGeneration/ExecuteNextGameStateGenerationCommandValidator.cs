@@ -9,9 +9,6 @@ using System.Threading.Tasks;
 namespace GameOfLife.Application.Games.ExecuteNextStateGeneration;
 internal sealed class ExecuteNextGameStateGenerationCommandValidator : AbstractValidator<ExecuteNextGameStateGenerationCommand>
 {
-    public ExecuteNextGameStateGenerationCommandValidator()
-    {
-        RuleFor(c => c.GameId)
+    public ExecuteNextGameStateGenerationCommandValidator() => RuleFor(c => c.GameId)
             .NotEmpty();
-    }
 }

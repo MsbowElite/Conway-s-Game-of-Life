@@ -1,13 +1,9 @@
 ﻿using FluentValidation;
 
-namespace GameOfLife.Application.Games.GetNextState
+namespace GameOfLife.Application.Games.GetNextState;
+
+internal sealed class GetNextGameStateCommandValidator : AbstractValidator<GetNextGameStateCommand>
 {
-    internal sealed class GetNextGameStateCommandValidator : AbstractValidator<GetNextGameStateCommand>
-    {
-        public GetNextGameStateCommandValidator()
-        {
-            RuleFor(c => c.GameId)
-                .NotEmpty();
-        }
-    }
+    public GetNextGameStateCommandValidator() => RuleFor(c => c.GameId)
+            .NotEmpty();
 }

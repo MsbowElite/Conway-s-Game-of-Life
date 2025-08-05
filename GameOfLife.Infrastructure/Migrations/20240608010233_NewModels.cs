@@ -2,21 +2,20 @@
 
 #nullable disable
 
-namespace GameOfLife.Infrastructure.Migrations
+namespace GameOfLife.Infrastructure.Migrations;
+
+/// <inheritdoc />
+public partial class NewModels : Migration
 {
     /// <inheritdoc />
-    public partial class NewModels : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
 
-        }
+    }
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+    /// <inheritdoc />
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
 
-        }
     }
 }

@@ -26,8 +26,5 @@ public class ApiApplicationFixture : IDisposable
         );
     }
 
-    public void Dispose()
-    {
-        Application.Dispose();
-    }
+    public void Dispose() => Application.Dispose();
 }

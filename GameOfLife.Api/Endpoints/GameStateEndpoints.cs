@@ -18,7 +18,7 @@ public class GameStateEndpoints : IEndpoints
 
     public static void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        var battleStates = app.MapGroup(BaseRoute)
+        RouteGroupBuilder battleStates = app.MapGroup(BaseRoute)
             .WithTags(Tag);
 
         battleStates.MapGet($"{Slash}{{gameStateId}}", GetGameStateByIdAsync)
@@ -34,7 +34,7 @@ public class GameStateEndpoints : IEndpoints
     ISender sender,
     CancellationToken cancellationToken)
     {
-        var result = await sender.Send(new GetGameStateByIdQuery(gameStateId), cancellationToken);
+        Result<GameStateResponse> result = await sender.Send(new GetGameStateByIdQuery(gameStateId), cancellationToken);
 
         return result.Match(Results.Ok, CustomResults.Problem);
     }

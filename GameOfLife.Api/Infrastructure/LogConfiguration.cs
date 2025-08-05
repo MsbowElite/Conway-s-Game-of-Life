@@ -7,7 +7,7 @@ public static class LogConfiguration
 {
     public static void ConfigureLogging(this IConfiguration configuration, IServiceCollection services)
     {
-        var loggingSection = configuration.GetSection(nameof(LoggingSettings));
+        IConfigurationSection loggingSection = configuration.GetSection(nameof(LoggingSettings));
         var loggingSettings = new LoggingSettings();
         new ConfigureFromConfigurationOptions<LoggingSettings>(loggingSection)
             .Configure(loggingSettings);
@@ -22,15 +22,15 @@ public static class LogConfiguration
 
     public static void ConfigureSerilog(this IConfiguration configuration)
     {
-        var loggingSection = configuration.GetSection(nameof(LoggingSettings));
+        IConfigurationSection loggingSection = configuration.GetSection(nameof(LoggingSettings));
         LoggingSettings loggingSettings = new();
         new ConfigureFromConfigurationOptions<LoggingSettings>(loggingSection)
             .Configure(loggingSettings);
 
-        var loggerConfiguration = new LoggerConfiguration()
-            .ReadFrom.Configuration(loggingSection)
-            .Enrich.FromLogContext()
-            .WriteTo.Console();
+        LoggerConfiguration loggerConfiguration = new LoggerConfiguration()
+            .ReadFrom.Configuration(configuration: loggingSection).Enrich
+            .FromLogContext().WriteTo
+            .Console();
 
         Log.Logger = loggerConfiguration.CreateLogger();
     }

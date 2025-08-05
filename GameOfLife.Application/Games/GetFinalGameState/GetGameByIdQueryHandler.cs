@@ -21,7 +21,7 @@ internal sealed class GetGameByIdQueryHandler(
         GetFinalGameStateQuery query,
         CancellationToken cancellationToken)
     {
-        var getGameByIdQueryResult = await sender.Send(new GetGameByIdQuery(query.GameId), cancellationToken);
+        Result<GameResponse> getGameByIdQueryResult = await sender.Send(new GetGameByIdQuery(query.GameId), cancellationToken);
         if (getGameByIdQueryResult.IsFailure)
             return getGameByIdQueryResult;
 

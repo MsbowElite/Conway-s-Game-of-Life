@@ -20,14 +20,14 @@ internal sealed class ExecuteNextGameStateGenerationCommandHandler(
     ExecuteNextGameStateGenerationCommand command,
     CancellationToken cancellationToken)
     {
-        var game = await gameRepository.GetByIdAsync(command.GameId, cancellationToken);
+        Game game = await gameRepository.GetByIdAsync(command.GameId, cancellationToken);
         if (game is null)
             return Result.Failure<Guid>(GameErrors.NotFound(command.GameId));
 
         if (IfExistsFinalState(game))
             return Result.Failure<Guid>(GameErrors.FinalStateAlreadyReached(command.GameId));
 
-        var lastGameState = await gameStateRepository.GetLastByGameId(command.GameId, cancellationToken);
+        GameState? lastGameState = await gameStateRepository.GetLastByGameId(command.GameId, cancellationToken);
         if (lastGameState is null)
             return Result.Failure<Guid>(GameErrors.StateNotFound(command.GameId));
 
@@ -64,7 +64,7 @@ internal sealed class ExecuteNextGameStateGenerationCommandHandler(
         if (!IfIsSameAsLastState(lastGameState, newGameState) && 
             CheckIfHaveAtLeastTwoValidStates(newGameState.GenerationNumber))
         {
-            var pastGameState = await gameStateRepository.GetByGameIdAndGenerationNumberAsync(
+            GameState pastGameState = await gameStateRepository.GetByGameIdAndGenerationNumberAsync(
                 lastGameState.GameId,
                 Convert.ToUInt16(lastGameState.GenerationNumber - 1),
                 cancellationToken

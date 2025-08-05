@@ -24,7 +24,7 @@ public class GameEndpoints : IEndpoints
 
     public static void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        var battles = app.MapGroup(BaseRoute)
+        RouteGroupBuilder battles = app.MapGroup(BaseRoute)
             .WithTags(Tag);
 
         battles.MapPost(Slash, CreateGameAsync)
@@ -92,8 +92,8 @@ public class GameEndpoints : IEndpoints
         ISender sender,
         CancellationToken cancellationToken)
     {
-        var command = request.Adapt<CreateGameCommand>();
-        var result = await sender.Send(command, cancellationToken);
+        CreateGameCommand command = request.Adapt<CreateGameCommand>();
+        Result<Guid> result = await sender.Send(command, cancellationToken);
 
         return result.MatchCreated(
             BaseRoute,
@@ -105,7 +105,7 @@ public class GameEndpoints : IEndpoints
     ISender sender,
     CancellationToken cancellationToken)
     {
-        var result = await sender.Send(new ExecuteNextGameStateGenerationCommand(gameId), cancellationToken);
+        Result<Guid> result = await sender.Send(new ExecuteNextGameStateGenerationCommand(gameId), cancellationToken);
 
         return result.MatchCreated(
             GameStateEndpoints.BaseRoute,
@@ -117,7 +117,7 @@ public class GameEndpoints : IEndpoints
         ISender sender,
         CancellationToken cancellationToken)
     {
-        var result = await sender.Send(new GetNextGameStateCommand(gameId), cancellationToken);
+        Result<object> result = await sender.Send(new GetNextGameStateCommand(gameId), cancellationToken);
 
         return result.Match(Results.Ok, CustomResults.Problem);
     }
@@ -127,7 +127,7 @@ public class GameEndpoints : IEndpoints
         ISender sender,
         CancellationToken cancellationToken)
     {
-        var result = await sender.Send(new GetNextGameStateCommand(gameId), cancellationToken);
+        Result<object> result = await sender.Send(new GetNextGameStateCommand(gameId), cancellationToken);
 
         return result.Match(Results.Ok, CustomResults.Problem);
     }
@@ -138,7 +138,7 @@ public class GameEndpoints : IEndpoints
     ISender sender,
     CancellationToken cancellationToken)
     {
-        var result = await sender.Send(new GetSkipAndNextGameStateCommand(gameId, attempts), cancellationToken);
+        Result<object> result = await sender.Send(new GetSkipAndNextGameStateCommand(gameId, attempts), cancellationToken);
 
         return result.Match(Results.Ok, CustomResults.Problem);
     }
@@ -148,7 +148,7 @@ public class GameEndpoints : IEndpoints
         ISender sender,
         CancellationToken cancellationToken)
     {
-        var result = await sender.Send(new GetGameByIdQuery(gameId), cancellationToken);
+        Result<GameResponse> result = await sender.Send(new GetGameByIdQuery(gameId), cancellationToken);
 
         return result.Match(Results.Ok, CustomResults.Problem);
     }
@@ -159,7 +159,7 @@ public class GameEndpoints : IEndpoints
     ISender sender,
     CancellationToken cancellationToken)
     {
-        var result = await sender.Send(new GetGameStateByGenerationQuery(gameId, generationNumber), cancellationToken);
+        Result<GameStateResponse> result = await sender.Send(new GetGameStateByGenerationQuery(gameId, generationNumber), cancellationToken);
 
         return result.Match(Results.Ok, CustomResults.Problem);
     }

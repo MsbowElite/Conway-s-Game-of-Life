@@ -19,7 +19,7 @@ internal sealed class GetSkipAndNextGameStateCommandHandler(
     GetSkipAndNextGameStateCommand command,
     CancellationToken cancellationToken)
     {
-        var lastGameState = await gameStateRepository.GetLastByGameId(command.GameId, cancellationToken);
+        GameState? lastGameState = await gameStateRepository.GetLastByGameId(command.GameId, cancellationToken);
         if (lastGameState is null)
             return Result.Failure<Guid>(GameErrors.StateNotFound(command.GameId));
 
@@ -38,7 +38,7 @@ internal sealed class GetSkipAndNextGameStateCommandHandler(
         if(executeNextGameStateGenerationCommand is null)
             return Result.Failure(GameErrors.CriticalFailure());
 
-        var gameState = await gameStateRepository.GetByIdAsync(executeNextGameStateGenerationCommand.Value, cancellationToken);
+        GameState gameState = await gameStateRepository.GetByIdAsync(executeNextGameStateGenerationCommand.Value, cancellationToken);
 
         return gameState.Adapt<GameStateResponse>();
     }
