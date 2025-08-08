@@ -2,7 +2,7 @@
 
 namespace GameOfLife.Api.Extensions;
 
-public static class MiddlewareExtensions
+internal static class MiddlewareExtensions
 {
     /// <summary>
     /// Apply an uniqueId for all logs of a scoped request to help tracking errors and logs.

@@ -16,8 +16,9 @@ internal sealed class GetGameStateByIdQueryHandler(
         GetGameStateByIdQuery query,
         CancellationToken cancellationToken)
     {
-        GameState gameState = await gameStateRepository.GetByIdAsync(query.GameStateId, cancellationToken);
-        if (gameState == null) return Result.Failure<GameStateResponse>(GameErrors.NotFound(query.GameStateId));
+        GameState? gameState = await gameStateRepository.GetByIdAsync(query.GameStateId, cancellationToken);
+        if (gameState is null)
+            return Result.Failure<GameStateResponse>(GameErrors.NotFound(query.GameStateId));
 
         return gameState.Adapt<GameStateResponse>();
     }

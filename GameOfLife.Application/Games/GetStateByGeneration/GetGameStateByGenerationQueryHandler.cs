@@ -21,7 +21,7 @@ internal sealed class GetGameStateByGenerationQueryHandler(
         if (!gameExists)
             return Result.Failure<GameStateResponse>(GameErrors.NotFound(query.GameId));
 
-        GameState gameState = await gameStateRepository.GetByGameIdAndGenerationNumberAsync(
+        GameState? gameState = await gameStateRepository.GetByGameIdAndGenerationNumberAsync(
             query.GameId, query.GenerationNumber, cancellationToken);
         if (gameState == null)
             return Result.Failure<GameStateResponse>(GameErrors.StateNotFound(query.GenerationNumber));

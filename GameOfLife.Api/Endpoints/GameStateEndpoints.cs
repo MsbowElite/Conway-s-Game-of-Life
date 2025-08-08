@@ -9,9 +9,8 @@ using MediatR;
 
 namespace GameOfLife.Api.Endpoints;
 
-public class GameStateEndpoints : IEndpoints
+internal sealed class GameStateEndpoints : IEndpoints
 {
-    private const string ContentType = "application/json";
     private const string Tag = "GameStates";
     public const string BaseRoute = "gamestates";
     private const string Slash = "/";

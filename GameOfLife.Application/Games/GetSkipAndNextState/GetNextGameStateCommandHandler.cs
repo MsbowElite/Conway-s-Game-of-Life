@@ -23,7 +23,7 @@ internal sealed class GetSkipAndNextGameStateCommandHandler(
         if (lastGameState is null)
             return Result.Failure<Guid>(GameErrors.StateNotFound(command.GameId));
 
-        Result<Guid> executeNextGameStateGenerationCommand = null;
+        Result<Guid>? executeNextGameStateGenerationCommand = null;
 
         for (
             ushort counter = lastGameState.GenerationNumber;
@@ -38,7 +38,9 @@ internal sealed class GetSkipAndNextGameStateCommandHandler(
         if(executeNextGameStateGenerationCommand is null)
             return Result.Failure(GameErrors.CriticalFailure());
 
-        GameState gameState = await gameStateRepository.GetByIdAsync(executeNextGameStateGenerationCommand.Value, cancellationToken);
+        GameState? gameState = await gameStateRepository.GetByIdAsync(executeNextGameStateGenerationCommand.Value, cancellationToken);
+        if (gameState is null)
+            return Result.Failure<object>(GameErrors.StateNotFound(command.GameId));
 
         return gameState.Adapt<GameStateResponse>();
     }

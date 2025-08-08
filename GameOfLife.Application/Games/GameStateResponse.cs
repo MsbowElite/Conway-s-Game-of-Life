@@ -3,7 +3,7 @@
 public sealed record GameStateResponse
 {
     public Guid Id { get; init; }
-    public string State { get; init; }
+    public required string State { get; init; }
     public ushort GenerationNumber { get; init; }
     public DateTime CreatedAt { get; init; }
     public DateTime LastUpdatedAt { get; init; }

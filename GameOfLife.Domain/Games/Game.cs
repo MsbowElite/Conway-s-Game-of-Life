@@ -20,7 +20,7 @@ public sealed class Game : Entity
     public ushort Height { get; }
     public Guid? FinalGameStateId { get; set; }
 
-    public GameState? GameState { get; set; } = null;
+    public GameState? GameState { get; set; }
 
-    public ICollection<GameState> GameStates { get; set; }
+    public ICollection<GameState> GameStates { get; } = [];
 }

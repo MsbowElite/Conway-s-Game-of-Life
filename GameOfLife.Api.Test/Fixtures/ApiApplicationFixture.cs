@@ -2,10 +2,11 @@
 
 namespace GameOfLife.Api.Test.Fixtures;
 
-public class ApiApplicationFixture : IDisposable
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Maintainability", "CA1515:Consider making public types internal", Justification = "Tests must be public")]
+public sealed class ApiApplicationFixture : IDisposable
 {
-    public ApiApplication Application;
-    public CreateGameRequest CreateGameRequest;
+    public ApiApplication Application { get; }
+    public CreateGameRequest CreateGameRequest { get; }
 
     public ApiApplicationFixture()
     {

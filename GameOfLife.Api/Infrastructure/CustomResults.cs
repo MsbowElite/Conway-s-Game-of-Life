@@ -2,7 +2,7 @@
 
 namespace GameOfLife.Api.Infrastructure;
 
-public static class CustomResults
+internal static class CustomResults
 {
     public static IResult Problem(Result result)
     {

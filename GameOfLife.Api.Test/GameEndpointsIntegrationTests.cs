@@ -38,7 +38,7 @@ public class GameEndpointsIntegrationTests(ApiApplicationFixture apiApplicationF
 
         HttpResponseMessage response = await _httpClient.PostAsJsonAsync("/games", request);
 
-        Result errorResult = await HttpClientHelper.ReadJsonResponser<Result>(response);
+        Result? errorResult = await HttpClientHelper.ReadJsonResponser<Result>(response);
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.IsType<Result>(errorResult);
     }
@@ -48,7 +48,7 @@ public class GameEndpointsIntegrationTests(ApiApplicationFixture apiApplicationF
     {
         HttpResponseMessage response = await _httpClient.PostAsJsonAsync("/games", _createGameRequest);
 
-        Result errorResult = await HttpClientHelper.ReadJsonResponser<Result>(response);
+        Result? errorResult = await HttpClientHelper.ReadJsonResponser<Result>(response);
         Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
         Assert.IsType<Result>(errorResult);
     }
@@ -58,7 +58,7 @@ public class GameEndpointsIntegrationTests(ApiApplicationFixture apiApplicationF
     {
         HttpResponseMessage response = await _httpClient.PostAsJsonAsync("/games", _createGameRequest);
 
-        Result errorResult = await HttpClientHelper.ReadJsonResponser<Result>(response);
+        Result? errorResult = await HttpClientHelper.ReadJsonResponser<Result>(response);
         Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
         Assert.IsType<Result>(errorResult);
     }
@@ -66,17 +66,20 @@ public class GameEndpointsIntegrationTests(ApiApplicationFixture apiApplicationF
     [Fact]
     public async Task B_0_GetByIdReturnGame()
     {
-        HttpResponseMessage response = await _httpClient.GetAsync($"/games/{_createGameRequest.GameId}");
-        GameResponse game = await HttpClientHelper.ReadJsonResponser<GameResponse>(response);
+        Uri uri = new($"/games/{_createGameRequest.GameId}", UriKind.Relative);
+        HttpResponseMessage response = await _httpClient.GetAsync(uri);
+        GameResponse? game = await HttpClientHelper.ReadJsonResponser<GameResponse>(response);
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.NotNull(game);
         Assert.Equal(_createGameRequest.GameId, game.Id);
     }
 
     [Fact]
     public async Task B_1_GetByIdThatNotExist_ReturnErrorNotFound()
     {
-        HttpResponseMessage response = await _httpClient.GetAsync($"/games/{Guid.NewGuid()}");
-        Result errorResult = await HttpClientHelper.ReadJsonResponser<Result>(response);
+        Uri uri = new($"/games/{Guid.NewGuid()}", UriKind.Relative);
+        HttpResponseMessage response = await _httpClient.GetAsync(uri);
+        Result? errorResult = await HttpClientHelper.ReadJsonResponser<Result>(response);
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         Assert.IsType<Result>(errorResult);
     }
@@ -96,7 +99,7 @@ public class GameEndpointsIntegrationTests(ApiApplicationFixture apiApplicationF
     {
         HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"/games/{Guid.Empty}/GameStates/Next", string.Empty);
 
-        Result result = await HttpClientHelper.ReadJsonResponser<Result>(response);
+        Result? result = await HttpClientHelper.ReadJsonResponser<Result>(response);
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.IsType<Result>(result);
     }

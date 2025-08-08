@@ -26,21 +26,22 @@ public sealed partial class GameState : Entity
         GenerationNumber = generationNumber;
     }
 
-    private GameState() { }
+    private GameState() => State = string.Empty;
 
     public string State { get; set; }
     public ushort GenerationNumber { get; set; }
     public Guid GameId { get; set; }
 
     public Game? GameRelation { get; set; }
-    public Game Game { get; set; }
+    public Game? Game { get; set; }
 
     public void ExecuteNextGaneration()
     {
-        bool[][] cells;
+        bool[][] cells = JsonSerializer.Deserialize<bool[][]>(State)
+            ?? throw new InvalidOperationException("Deserialized cells state cannot be null.");
+
         bool[][] cellsFutureState;
 
-        cells = JsonSerializer.Deserialize<bool[][]>(State);
         int width = cells.Length;
         int height = cells[0].Length;
 
@@ -56,7 +57,7 @@ public sealed partial class GameState : Entity
             {
                 int neighboursLiveCount = liveNeighbours(i, j);
 
-                cellsFutureState[i][j] = neighboursLiveCount > 1 && 
+                cellsFutureState[i][j] = neighboursLiveCount > 1 &&
                     (neighboursLiveCount == 2 ? cells[i][j] : neighboursLiveCount == 3);
             }
         }

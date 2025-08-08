@@ -3,8 +3,8 @@
 public interface IGameStateRepository
 {
     Task InsertAsync(GameState gameState, CancellationToken cancellationToken);
-    Task<GameState> GetByIdAsync(Guid gameStateId, CancellationToken cancellationToken);
-    Task<GameState> GetByGameIdAndGenerationNumberAsync(
+    ValueTask<GameState?> GetByIdAsync(Guid gameStateId, CancellationToken cancellationToken);
+    ValueTask<GameState?> GetByGameIdAndGenerationNumberAsync(
         Guid gameId, ushort generationNumber, CancellationToken cancellationToken);
-    Task<GameState> GetLastByGameId(Guid gameId, CancellationToken cancellationToken);
+    ValueTask<GameState?> GetLastByGameId(Guid gameId, CancellationToken cancellationToken);
 }

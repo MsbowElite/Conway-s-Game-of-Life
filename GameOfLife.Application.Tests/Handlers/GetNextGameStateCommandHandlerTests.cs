@@ -27,7 +27,7 @@ public class GetNextGameStateCommandHandlerTests
                 .Returns(Task.FromResult(Result.Success(GameStatesFixture.GetGameState().Id)));
 
         _gameStateRepository.Setup(s => s.GetByIdAsync(It.IsAny<Guid>(), default))
-            .Returns(Task.FromResult(GameStatesFixture.GetGameState()));
+            .Returns(() => new ValueTask<GameState?>(GameStatesFixture.GetGameState()));
 
         var getNextGameStateCommandHandler = new GetNextGameStateCommandHandler(_gameStateRepository.Object, _sender.Object);
         Result<object> result = await getNextGameStateCommandHandler.Handle(

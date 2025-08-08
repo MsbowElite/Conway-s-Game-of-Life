@@ -13,7 +13,6 @@ namespace GameOfLife.Application.Games.GetFinalGameState;
 public sealed record GetFinalGameStateQuery(Guid GameId) : IQuery<object> { }
 
 internal sealed class GetGameByIdQueryHandler(
-        IGameStateRepository gameRepository,
         ISender sender)
     : IQueryHandler<GetFinalGameStateQuery, object>
 {
@@ -37,7 +36,7 @@ internal sealed class GetGameByIdQueryHandler(
             Guid lastGameStateId = Guid.Empty;
             do
             {
-                executeNextGameStateGenerationResult = await sender.Send(new ExecuteNextGameStateGenerationCommand(query.GameId));
+                executeNextGameStateGenerationResult = await sender.Send(new ExecuteNextGameStateGenerationCommand(query.GameId), cancellationToken);
                 if (executeNextGameStateGenerationResult.IsSuccess)
                     lastGameStateId = executeNextGameStateGenerationResult.Value;
 

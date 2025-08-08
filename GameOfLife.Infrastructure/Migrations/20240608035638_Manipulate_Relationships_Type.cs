@@ -5,6 +5,7 @@
 namespace GameOfLife.Infrastructure.Migrations;
 
 /// <inheritdoc />
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "<Pending>")]
 public partial class Manipulate_Relationships_Type : Migration
 {
     /// <inheritdoc />

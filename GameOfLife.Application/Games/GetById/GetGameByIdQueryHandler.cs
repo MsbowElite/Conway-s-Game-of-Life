@@ -12,7 +12,7 @@ namespace GameOfLife.Application.Games.GetById;
 /// Applying cache invalidation we can increase the cache time and make the information more reliable.
 /// </summary>
 /// <param name="GameId"></param>
-public sealed record GetGameByIdQuery(Guid GameId) : ICachedQuery<GameResponse> 
+public sealed record GetGameByIdQuery(Guid GameId) : ICachedQuery<GameResponse>
 {
     public string CacheKey => $"game-by-id-{GameId}";
 
@@ -27,8 +27,9 @@ internal sealed class GetGameByIdQueryHandler(
         GetGameByIdQuery query,
         CancellationToken cancellationToken)
     {
-        Game game = await gameRepository.GetByIdAsync(query.GameId, cancellationToken);
-        if (game == null) return Result.Failure<GameResponse>(GameErrors.NotFound(query.GameId));
+        Game? game = await gameRepository.GetByIdAsync(query.GameId, cancellationToken);
+        if (game is null)
+            return Result.Failure<GameResponse>(GameErrors.NotFound(query.GameId));
 
         return game.Adapt<GameResponse>();
     }

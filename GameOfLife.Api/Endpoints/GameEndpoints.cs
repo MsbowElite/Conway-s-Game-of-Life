@@ -15,7 +15,7 @@ using MediatR;
 
 namespace GameOfLife.Api.Endpoints;
 
-public class GameEndpoints : IEndpoints
+internal sealed class GameEndpoints : IEndpoints
 {
     private const string ContentType = "application/json";
     private const string Tag = "Games";

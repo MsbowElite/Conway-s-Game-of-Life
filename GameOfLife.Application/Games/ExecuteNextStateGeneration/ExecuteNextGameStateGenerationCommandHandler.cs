@@ -20,7 +20,7 @@ internal sealed class ExecuteNextGameStateGenerationCommandHandler(
     ExecuteNextGameStateGenerationCommand command,
     CancellationToken cancellationToken)
     {
-        Game game = await gameRepository.GetByIdAsync(command.GameId, cancellationToken);
+        Game? game = await gameRepository.GetByIdAsync(command.GameId, cancellationToken);
         if (game is null)
             return Result.Failure<Guid>(GameErrors.NotFound(command.GameId));
 
@@ -42,7 +42,7 @@ internal sealed class ExecuteNextGameStateGenerationCommandHandler(
             );
         newGameState.ExecuteNextGaneration();
 
-        if (await CheckIfIsFinalStateAsync(lastGameState, newGameState, cancellationToken))
+        if (await CheckIfIsFinalStateAsync(lastGameState, newGameState, gameStateRepository, cancellationToken))
         {
             game.FinalGameStateId = lastGameState.GameId;
             await unitOfWork.SaveChangesAsync(cancellationToken);
@@ -59,12 +59,12 @@ internal sealed class ExecuteNextGameStateGenerationCommandHandler(
     /// If the game stop to create states different then past 2 generations, the game has already reached the conclusion.  
     /// </summary>
     /// <returns></returns>
-    private async ValueTask<bool> CheckIfIsFinalStateAsync(GameState lastGameState, GameState newGameState, CancellationToken cancellationToken)
+    private static async ValueTask<bool> CheckIfIsFinalStateAsync(GameState lastGameState, GameState newGameState, IGameStateRepository gameStateRepository, CancellationToken cancellationToken)
     {
         if (!IfIsSameAsLastState(lastGameState, newGameState) && 
             CheckIfHaveAtLeastTwoValidStates(newGameState.GenerationNumber))
         {
-            GameState pastGameState = await gameStateRepository.GetByGameIdAndGenerationNumberAsync(
+            GameState? pastGameState = await gameStateRepository.GetByGameIdAndGenerationNumberAsync(
                 lastGameState.GameId,
                 Convert.ToUInt16(lastGameState.GenerationNumber - 1),
                 cancellationToken
@@ -79,11 +79,11 @@ internal sealed class ExecuteNextGameStateGenerationCommandHandler(
     /// </summary>
     /// <param name="game"></param>
     /// <returns></returns>
-    private bool IfExistsFinalState(Game game) => game.FinalGameStateId is not null;
+    private static bool IfExistsFinalState(Game game) => game.FinalGameStateId is not null;
 
-    private bool IfIsSameAsLastState(GameState lastGameState, GameState newGameState) => 
-        string.Equals(lastGameState.State, newGameState.State);
+    private static bool IfIsSameAsLastState(GameState lastGameState, GameState newGameState) => 
+        string.Equals(lastGameState.State, newGameState.State, StringComparison.Ordinal);
 
-    private bool CheckIfHaveAtLeastTwoValidStates(ushort generationNumber) => generationNumber > 1;
+    private static bool CheckIfHaveAtLeastTwoValidStates(ushort generationNumber) => generationNumber > 1;
 }
 

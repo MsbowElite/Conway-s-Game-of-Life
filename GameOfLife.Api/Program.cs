@@ -11,7 +11,12 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog((context, loggerConfig) =>
     loggerConfig.ReadFrom.Configuration(context.Configuration));
-builder.Configuration.ConfigureLogging(builder.Services);
+
+builder.Logging.ClearProviders();
+builder.Logging.AddConfiguration(builder.Configuration.GetSection("Logging"));
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
+
 builder.Configuration.ConfigureSerilog();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -45,4 +50,6 @@ app.UseExceptionHandler();
 
 app.Run();
 
+#pragma warning disable CA1515 // Make it accessible by tests
 public partial class Program { }
+#pragma warning restore CA1515

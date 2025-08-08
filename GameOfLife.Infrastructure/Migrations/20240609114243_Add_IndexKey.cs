@@ -17,7 +17,7 @@ public partial class Add_IndexKey : Migration
         migrationBuilder.CreateIndex(
             name: "IX_GameStates_GameId_GenerationNumber",
             table: "GameStates",
-            columns: new[] { "GameId", "GenerationNumber" },
+            columns: ["GameId", "GenerationNumber"],
             unique: true);
     }
 

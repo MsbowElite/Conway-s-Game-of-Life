@@ -20,7 +20,7 @@ internal sealed class ValidationPipelineBehavior<TRequest, TResponse>(
 
         if (validationFailures.Length == 0)
         {
-            return await next();
+            return await next(cancellationToken);
         }
 
         if (typeof(TResponse).IsGenericType &&
@@ -34,9 +34,14 @@ internal sealed class ValidationPipelineBehavior<TRequest, TResponse>(
 
             if (failureMethod is not null)
             {
-                return (TResponse)failureMethod.Invoke(
+                object? result = failureMethod.Invoke(
                     null,
-                    new object[] { CreateValidationError(validationFailures) });
+                    [CreateValidationError(validationFailures)]);
+
+                if (result is not null)
+                {
+                    return (TResponse)result;
+                }
             }
         }
         else if (typeof(TResponse) == typeof(Result))
@@ -51,7 +56,7 @@ internal sealed class ValidationPipelineBehavior<TRequest, TResponse>(
     {
         if (!validators.Any())
         {
-            return [];
+            return Array.Empty<ValidationFailure>();
         }
 
         var context = new ValidationContext<TRequest>(request);

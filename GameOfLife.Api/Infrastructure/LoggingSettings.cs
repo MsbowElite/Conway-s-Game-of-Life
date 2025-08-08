@@ -1,6 +1,6 @@
 ﻿namespace GameOfLife.Api.Infrastructure;
 
-public class LoggingSettings
+internal sealed class LoggingSettings
 {
     public string ApplicationName { get; set; } = default!;
     public string TeamsWebhookUrl { get; set; } = default!;

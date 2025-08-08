@@ -2,7 +2,7 @@
 
 namespace GameOfLife.Application.Test.Fixtures;
 
-public static class GamesFixture
+internal static class GamesFixture
 {
     public static Game GetGameMock() => new(
                 new Guid(),

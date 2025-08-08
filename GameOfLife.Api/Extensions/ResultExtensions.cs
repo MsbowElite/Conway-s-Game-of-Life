@@ -24,7 +24,15 @@ internal static class ResultExtensions
     /// <param name="onFailure"></param>
     /// <returns></returns>
     public static IResult MatchCreated<TIn>(
-    this Result<TIn> result,
-    string baseAddress,
-    Func<Result<TIn>, IResult> onFailure) => result.IsSuccess ? Results.Created($"/{baseAddress}/{result.Value}", result.Value) : onFailure(result);
+        this Result<TIn> result,
+        string baseAddress,
+        Func<Result<TIn>, IResult> onFailure)
+    {
+        if (result.IsSuccess)
+        {
+            var uri = new Uri($"/{baseAddress}/{result.Value}", UriKind.Relative);
+            return Results.Created(uri, result.Value);
+        }
+        return onFailure(result);
+    }
 }

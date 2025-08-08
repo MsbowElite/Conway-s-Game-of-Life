@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace GameOfLife.Api.Test;
 
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Maintainability", "CA1515:Consider making public types internal", Justification = "Tests must be public")]
 public class ApiApplication : WebApplicationFactory<Program>
 {
     /// <summary>
@@ -21,7 +22,7 @@ public class ApiApplication : WebApplicationFactory<Program>
 
         builder.ConfigureServices(services =>
         {
-            services.RemoveAll(typeof(DbContextOptions<GameContext>));
+            services.RemoveAll<DbContextOptions<GameContext>>();
             services.AddDbContext<GameContext>(options =>
                 options.UseInMemoryDatabase("Testing", root));
         });

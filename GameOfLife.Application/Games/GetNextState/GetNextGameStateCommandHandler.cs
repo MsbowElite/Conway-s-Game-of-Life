@@ -23,7 +23,9 @@ internal sealed class GetNextGameStateCommandHandler(
         if (result.IsFailure)
             return result;
 
-        GameState gameState = await gameStateRepository.GetByIdAsync(result.Value, cancellationToken);
+        GameState? gameState = await gameStateRepository.GetByIdAsync(result.Value, cancellationToken);
+        if (gameState is null)
+            return Result.Failure<object>(GameErrors.StateNotFound(command.GameId));
 
         return gameState.Adapt<GameStateResponse>();
     }
