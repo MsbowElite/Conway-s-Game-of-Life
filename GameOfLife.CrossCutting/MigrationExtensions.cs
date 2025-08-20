@@ -1,6 +1,7 @@
 ﻿using GameOfLife.Infrastructure.Database;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GameOfLife.CrossCutting;
@@ -14,15 +15,25 @@ public static class MigrationExtensions
         using GameContext dbContext =
             scope.ServiceProvider.GetRequiredService<GameContext>();
 
-        if (CheckIfProviderIsNotInMemory(dbContext))
+        if (dbContext.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory")
+        {
             dbContext.Database.Migrate();
+        }
     }
 
-    /// <summary>
-    /// Get provider name and check if it is InMemory
-    /// </summary>
-    /// <param name="dbContext"></param>
-    /// <returns></returns>
-    private static bool CheckIfProviderIsNotInMemory(GameContext dbContext) =>
-        !string.Equals(dbContext.Database.ProviderName, "Microsoft.EntityFrameworkCore.InMemory", StringComparison.OrdinalIgnoreCase);
+    //public static void ConfigureDatabase(this IServiceCollection services, IConfiguration configuration)
+    //{
+    //    // Fix: Ensure the GetValue extension method is available by adding the required using directive
+    //    if (configuration.GetValue<bool>("UseInMemoryDatabase"))
+    //    {
+    //        services.AddDbContext<GameContext>(options =>
+    //            options.UseInMemoryDatabase("GameOfLife"));
+    //    }
+    //    else
+    //    {
+    //        services.AddDbContext<GameContext>(options =>
+    //            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+    //    }
+    //}
 }
+

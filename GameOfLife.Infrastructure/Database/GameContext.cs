@@ -2,7 +2,6 @@
 using GameOfLife.Domain.GameStates;
 using GameOfLife.SharedKernel.Abstractions;
 using Microsoft.EntityFrameworkCore;
-using System.Data.Entity.Infrastructure.Annotations;
 
 namespace GameOfLife.Infrastructure.Database;
 
